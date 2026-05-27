@@ -4,108 +4,194 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AquaIA UFMS</title>
+  <meta name="theme-color" content="#0B8EF3" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div>
-      <p class="eyebrow">Hackathon Núcleo de Formação Cidadã</p>
-      <h1>AquaIA UFMS</h1>
-      <p class="subtitle">Inteligência artificial para monitorar e reduzir desperdícios de água.</p>
-    </div>
-    <div class="status-chip" id="geminiStatus">Verificando IA...</div>
-  </header>
+  <div class="app-bg" aria-hidden="true">
+    <span class="orb orb-one"></span>
+    <span class="orb orb-two"></span>
+  </div>
 
-  <main class="shell">
-    <section class="hero-card">
-      <div>
-        <p class="eyebrow">MVP funcional</p>
-        <h2>Registre uma ocorrência hídrica e veja a análise automática.</h2>
-        <p>O protótipo classifica o tipo de problema, estima gravidade, prioridade, litros desperdiçados por dia e ação sugerida para manutenção.</p>
-      </div>
-      <button class="primary" data-scroll="form-card">Registrar ocorrência</button>
-    </section>
-
-    <nav class="tabs" aria-label="Navegação principal">
-      <button class="tab active" data-tab="registro">Registrar</button>
-      <button class="tab" data-tab="painel">Painel</button>
-      <button class="tab" data-tab="sobre">Sobre</button>
-    </nav>
-
-    <section id="registro" class="tab-panel active">
-      <article class="card" id="form-card">
-        <div class="section-title">
-          <span>1</span>
-          <div>
-            <h2>Nova ocorrência</h2>
-            <p>Informe o local, descreva o problema e envie uma foto, se tiver.</p>
-          </div>
+  <main class="device-shell" aria-label="Protótipo AquaIA UFMS">
+    <section class="phone-frame">
+      <div class="statusbar" aria-hidden="true">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span></span><span></span><span></span>
         </div>
+      </div>
 
-        <form id="occurrenceForm" class="form">
+      <section id="inicio" class="screen active">
+        <div class="welcome-screen">
+          <div class="brand-lockup">
+            <div class="logo-mark" aria-hidden="true">
+              <svg viewBox="0 0 96 96" role="img">
+                <defs>
+                  <linearGradient id="dropGradient" x1="20" x2="76" y1="8" y2="88">
+                    <stop stop-color="#61C9FF" />
+                    <stop offset="1" stop-color="#087BEA" />
+                  </linearGradient>
+                </defs>
+                <path d="M48 7C34 25 21 42 21 59c0 17 12 30 27 30s27-13 27-30C75 42 62 25 48 7Z" fill="url(#dropGradient)"/>
+                <path d="M29 64c9 6 24 8 39 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".92"/>
+                <path d="M36 73c8 3 17 3 25 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+              </svg>
+            </div>
+            <div>
+              <h1>Aqua<span>IA</span></h1>
+              <strong>UFMS</strong>
+            </div>
+          </div>
+
+          <p class="welcome-copy">Monitoramento inteligente para um <strong>campus sustentável.</strong></p>
+
+          <div class="campus-illustration" aria-label="Ilustração de campus com água e torre">
+            <div class="river"></div>
+            <div class="building tower"><span></span><span></span><span></span></div>
+            <div class="building main-building"><span></span><span></span><span></span><span></span></div>
+            <div class="water-tank"><span></span></div>
+            <div class="tree tree-left"></div>
+            <div class="tree tree-right"></div>
+            <div class="cloud cloud-one"></div>
+            <div class="cloud cloud-two"></div>
+          </div>
+
+          <button class="dark-cta" type="button" data-tab-target="dashboard">
+            Começar
+            <span aria-hidden="true">➜</span>
+          </button>
+          <button class="link-button" type="button" data-tab-target="sobre">Saiba mais</button>
+        </div>
+      </section>
+
+      <section id="dashboard" class="screen">
+        <header class="app-topbar">
+          <div>
+            <p class="mini-label">Campus Cidade Universitária</p>
+            <h2>Olá, equipe! 👋</h2>
+          </div>
+          <button class="icon-button" type="button" aria-label="Status da IA">
+            <span id="geminiStatus">IA</span>
+          </button>
+        </header>
+
+        <section class="content-block">
+          <div class="section-head">
+            <div>
+              <h3>Panorama de hoje</h3>
+              <p>Atualizado em tempo real pelo protótipo.</p>
+            </div>
+          </div>
+          <div class="metric-grid" id="homeStats">
+            <article class="metric-card"><span class="metric-icon blue">💧</span><strong>0</strong><p>Ocorrências abertas</p></article>
+            <article class="metric-card"><span class="metric-icon green">♻</span><strong>0 L</strong><p>Litros em atenção</p></article>
+            <article class="metric-card"><span class="metric-icon orange">⚠</span><strong>0</strong><p>Pontos críticos</p></article>
+            <article class="metric-card"><span class="metric-icon blue">📈</span><strong>92%</strong><p>Índice do MVP</p></article>
+          </div>
+        </section>
+
+        <button class="cta-card" type="button" data-tab-target="registro">
+          <span>
+            <strong>Registrar ocorrência</strong>
+            <small>Identificou vazamento, desperdício ou mau uso da água?</small>
+          </span>
+          <b aria-hidden="true">➜</b>
+        </button>
+
+        <section class="content-block compact">
+          <div class="section-head">
+            <div>
+              <h3>Impacto do mês</h3>
+              <p>Indicadores estimados para apresentação do MVP.</p>
+            </div>
+          </div>
+          <div class="impact-strip" id="impactStats">
+            <div><strong>0 L</strong><span>Litros mapeados</span></div>
+            <div><strong>R$ 0</strong><span>Economia estimada</span></div>
+            <div><strong>0</strong><span>Resolvidas</span></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="registro" class="screen">
+        <header class="simple-header">
+          <button class="back-button" type="button" data-tab-target="dashboard" aria-label="Voltar">‹</button>
+          <div>
+            <h2>Registrar ocorrência</h2>
+            <p>Informe os detalhes do problema.</p>
+          </div>
+        </header>
+
+        <form id="occurrenceForm" class="form-card">
           <label>
-            Local da ocorrência
-            <input name="local" placeholder="Ex.: Bloco 7, banheiro térreo" required />
+            Local
+            <input name="local" placeholder="Ex.: Bloco 12 - Laboratório de Química" required />
           </label>
 
           <label>
             Tipo de ambiente
             <select name="ambiente" required>
-              <option value="">Selecione</option>
+              <option value="">Selecione o tipo de ambiente</option>
               <option>Banheiro</option>
               <option>Laboratório</option>
               <option>Sala de aula</option>
               <option>Área administrativa</option>
               <option>Área externa</option>
               <option>Bebedouro</option>
+              <option>Restaurante Universitário</option>
               <option>Outro</option>
             </select>
           </label>
 
           <label>
-            Descrição do problema
-            <textarea name="descricao" rows="4" placeholder="Ex.: Torneira pingando continuamente há dois dias." required></textarea>
+            Descrição
+            <textarea name="descricao" maxlength="300" rows="5" placeholder="Descreva o que está acontecendo..." required></textarea>
+            <span class="field-counter" id="descCounter">0/300</span>
           </label>
 
-          <label class="upload-box">
+          <label class="upload-tile">
             <input type="file" name="imagem" accept="image/png,image/jpeg,image/webp" />
-            <span>Enviar foto da ocorrência</span>
-            <small>PNG, JPG ou WEBP. A IA analisará apenas a infraestrutura.</small>
+            <span class="upload-icon">▧</span>
+            <strong>Adicionar foto</strong>
+            <small>Formatos: JPG, PNG ou WEBP. Até 8 MB.</small>
           </label>
 
           <div id="imagePreview" class="preview hidden"></div>
 
-          <button class="primary full" type="submit">Analisar com IA</button>
+          <button class="primary-action" type="submit">
+            ✨ Analisar com IA
+          </button>
         </form>
-      </article>
 
-      <article class="card hidden" id="resultCard">
-        <div class="section-title">
-          <span>2</span>
-          <div>
-            <h2>Resultado da análise</h2>
-            <p>Esta leitura será salva no painel para acompanhamento.</p>
-          </div>
-        </div>
-        <div id="analysisResult" class="analysis-grid"></div>
-      </article>
-    </section>
-
-    <section id="painel" class="tab-panel">
-      <article class="card">
-        <div class="section-title between">
-          <div class="title-inline">
-            <span>3</span>
+        <article class="analysis-card hidden" id="resultCard">
+          <div class="section-head centered">
             <div>
-              <h2>Painel de manutenção</h2>
-              <p>Visão consolidada das ocorrências e do impacto estimado.</p>
+              <h3>Análise concluída</h3>
+              <p>Resultado gerado pelo AquaIA.</p>
             </div>
           </div>
-          <button class="secondary" id="refreshBtn">Atualizar</button>
+          <div id="analysisResult" class="analysis-result"></div>
+        </article>
+      </section>
+
+      <section id="painel" class="screen">
+        <header class="simple-header">
+          <button class="back-button" type="button" data-tab-target="dashboard" aria-label="Voltar">‹</button>
+          <div>
+            <h2>Manutenção</h2>
+            <p>Acompanhe e gerencie as ocorrências.</p>
+          </div>
+        </header>
+
+        <div class="segmented-control" aria-label="Filtros rápidos">
+          <button class="segment active" data-status-short="">Todas</button>
+          <button class="segment" data-status-short="Aberto">Abertas</button>
+          <button class="segment" data-status-short="Em análise">Em andamento</button>
+          <button class="segment" data-status-short="Resolvido">Concluídas</button>
         </div>
 
-        <div class="stats" id="stats"></div>
-        <div class="filters">
+        <div class="hidden-controls">
           <input id="searchInput" placeholder="Filtrar por local, tipo ou status" />
           <select id="statusFilter">
             <option value="">Todos os status</option>
@@ -113,31 +199,101 @@
             <option>Em análise</option>
             <option>Resolvido</option>
           </select>
+          <button id="refreshBtn" type="button">Atualizar</button>
         </div>
-        <div id="occurrenceList" class="occurrence-list"></div>
-      </article>
-    </section>
 
-    <section id="sobre" class="tab-panel">
-      <article class="card about-card">
-        <p class="eyebrow">Conceito do projeto</p>
-        <h2>Plataforma de inteligência hídrica participativa</h2>
-        <p>O AquaIA UFMS transforma a comunidade universitária em agente de sustentabilidade. O usuário registra vazamentos, infiltrações, descargas com fluxo contínuo ou oportunidades de reaproveitamento, e a IA ajuda a classificar e priorizar o atendimento.</p>
-        <div class="about-grid">
+        <div id="stats" class="stats-mini" aria-label="Resumo de ocorrências"></div>
+        <div id="occurrenceList" class="maintenance-list"></div>
+      </section>
+
+      <section id="mapa" class="screen">
+        <header class="simple-header with-filter">
           <div>
-            <strong>ODS principal</strong>
-            <p>ODS 6, água potável e saneamento.</p>
+            <h2>Mapa do campus</h2>
+            <p>Monitoramento em tempo real.</p>
           </div>
+          <button class="filter-button" type="button">Filtros</button>
+        </header>
+
+        <section class="campus-map-card">
+          <div class="map-surface">
+            <span class="path path-one"></span>
+            <span class="path path-two"></span>
+            <span class="lake"></span>
+            <span class="map-building b1"></span>
+            <span class="map-building b2"></span>
+            <span class="map-building b3"></span>
+            <span class="map-building b4"></span>
+            <button class="hotspot red" type="button">5</button>
+            <button class="hotspot yellow" type="button">2</button>
+            <button class="hotspot blue" type="button">1</button>
+            <button class="locate-button" type="button">⌖</button>
+          </div>
+        </section>
+
+        <section class="content-block compact">
+          <div class="section-head">
+            <div>
+              <h3>Insights</h3>
+              <p>Leitura visual para o pitch.</p>
+            </div>
+            <span class="period-chip">Esta semana</span>
+          </div>
+          <div class="insight-grid">
+            <article class="chart-card">
+              <p>Litros mapeados</p>
+              <strong id="mapLiters">0 L</strong>
+              <span class="positive">+18% vs semana anterior</span>
+              <div class="bar-chart" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </article>
+            <article class="chart-card">
+              <p>Ocorrências por tipo</p>
+              <div class="donut" aria-hidden="true"></div>
+              <ul class="legend">
+                <li><span class="dot blue"></span>Vazamento</li>
+                <li><span class="dot green"></span>Infiltração</li>
+                <li><span class="dot orange"></span>Reuso</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section id="sobre" class="screen">
+        <header class="simple-header">
+          <button class="back-button" type="button" data-tab-target="dashboard" aria-label="Voltar">‹</button>
           <div>
-            <strong>MVP</strong>
-            <p>Teste inicial em um bloco ou setor da UFMS.</p>
+            <h2>Sobre o AquaIA</h2>
+            <p>Plataforma de inteligência hídrica participativa.</p>
           </div>
-          <div>
-            <strong>Expansão</strong>
-            <p>Aplicação futura em outros câmpus, escolas e prédios públicos.</p>
+        </header>
+
+        <article class="about-card">
+          <div class="about-logo">
+            <div class="logo-mark small" aria-hidden="true">
+              <svg viewBox="0 0 96 96"><path d="M48 7C34 25 21 42 21 59c0 17 12 30 27 30s27-13 27-30C75 42 62 25 48 7Z" fill="#138FF2"/><path d="M29 64c9 6 24 8 39 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <strong>AquaIA UFMS</strong>
+              <span>MVP para o Hackathon</span>
+            </div>
           </div>
-        </div>
-      </article>
+          <p>O protótipo transforma estudantes e servidores em agentes de sustentabilidade. A comunidade registra vazamentos, infiltrações, descargas com fluxo contínuo ou oportunidades de reaproveitamento, enquanto a IA ajuda a classificar e priorizar o atendimento.</p>
+          <div class="about-grid">
+            <div><strong>ODS 6</strong><span>Água e saneamento.</span></div>
+            <div><strong>MVP</strong><span>Teste em um bloco ou setor.</span></div>
+            <div><strong>Expansão</strong><span>Outros câmpus, escolas e prédios públicos.</span></div>
+          </div>
+        </article>
+      </section>
+
+      <nav class="bottom-nav" aria-label="Navegação do aplicativo">
+        <button class="tab active" type="button" data-tab="dashboard"><span>⌂</span>Início</button>
+        <button class="tab" type="button" data-tab="painel"><span>◇</span>Ocorrências</button>
+        <button class="tab add-tab" type="button" data-tab="registro" aria-label="Registrar ocorrência"><span>＋</span></button>
+        <button class="tab" type="button" data-tab="mapa"><span>⌖</span>Mapa</button>
+        <button class="tab" type="button" data-tab="sobre"><span>○</span>Perfil</button>
+      </nav>
     </section>
   </main>
 
