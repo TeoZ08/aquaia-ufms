@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AquaIA UFMS</title>
   <meta name="theme-color" content="#0B8EF3" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
@@ -215,19 +216,35 @@
           <button class="filter-button" type="button">Filtros</button>
         </header>
 
-        <section class="campus-map-card">
-          <div class="map-surface">
-            <span class="path path-one"></span>
-            <span class="path path-two"></span>
-            <span class="lake"></span>
-            <span class="map-building b1"></span>
-            <span class="map-building b2"></span>
-            <span class="map-building b3"></span>
-            <span class="map-building b4"></span>
-            <button class="hotspot red" type="button">5</button>
-            <button class="hotspot yellow" type="button">2</button>
-            <button class="hotspot blue" type="button">1</button>
-            <button class="locate-button" type="button">⌖</button>
+        <section class="campus-map-card real-map-card">
+          <div class="map-toolbar">
+            <div>
+              <strong>Mapa real da Cidade Universitária</strong>
+              <span id="mapModeHint">OpenStreetMap via Leaflet, sem cadastro, com mapa oficial da UFMS como apoio visual.</span>
+            </div>
+            <div class="map-toggle" aria-label="Alternar visualização do mapa">
+              <button class="map-mode active" type="button" data-map-mode="osm">Mapa real</button>
+              <button class="map-mode" type="button" data-map-mode="campus">Mapa UFMS</button>
+            </div>
+          </div>
+
+          <div id="osmMapView" class="osm-map-view">
+            <div id="osmMap" class="osm-map" role="application" aria-label="Mapa real do campus UFMS"></div>
+            <div id="mapUnavailable" class="map-unavailable hidden">
+              <strong>Mapa real indisponível.</strong>
+              <p>Não é necessário cadastro nem chave de API. Se o mapa externo não carregar, o mapa oficial da UFMS continua disponível.</p>
+              <button class="secondary-action" type="button" data-map-mode="campus">Ver mapa UFMS</button>
+            </div>
+          </div>
+
+          <div id="campusMapView" class="campus-image-map hidden">
+            <img src="/assets/mapa-ufms-campo-grande-2026.png" alt="Mapa oficial da Cidade Universitária UFMS de Campo Grande" />
+            <div id="campusMarkers" class="campus-markers" aria-label="Pontos de ocorrência no mapa oficial"></div>
+          </div>
+
+          <div class="map-caption">
+            <span>Centro: Cidade Universitária UFMS, Campo Grande</span>
+            <span id="mapProviderLabel">OpenStreetMap + Leaflet</span>
           </div>
         </section>
 
@@ -298,6 +315,7 @@
   </main>
 
   <div id="toast" class="toast hidden"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/script.js"></script>
 </body>
 </html>

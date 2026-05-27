@@ -18,8 +18,19 @@ const geminiStatus = document.querySelector('#geminiStatus');
 const descInput = document.querySelector('textarea[name="descricao"]');
 const descCounter = document.querySelector('#descCounter');
 const segments = document.querySelectorAll('.segment');
+const mapModeButtons = document.querySelectorAll('[data-map-mode]');
+const osmMapView = document.querySelector('#osmMapView');
+const campusMapView = document.querySelector('#campusMapView');
+const osmMapElement = document.querySelector('#osmMap');
+const mapUnavailable = document.querySelector('#mapUnavailable');
+const campusMarkers = document.querySelector('#campusMarkers');
+const mapProviderLabel = document.querySelector('#mapProviderLabel');
 
 let occurrences = [];
+let appConfig = null;
+let osmMap = null;
+let osmMarkersLayer = null;
+
 
 function showToast(message) {
   toast.textContent = message;
@@ -34,6 +45,10 @@ function setActiveTab(name) {
   if (['painel', 'dashboard', 'mapa'].includes(name)) {
     loadOccurrences();
   }
+
+  if (name === 'mapa') {
+    initMapExperience();
+  }
 }
 
 tabs.forEach(tab => {
@@ -42,6 +57,12 @@ tabs.forEach(tab => {
 
 document.querySelectorAll('[data-tab-target]').forEach(button => {
   button.addEventListener('click', () => setActiveTab(button.dataset.tabTarget));
+});
+
+mapModeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    setMapMode(button.dataset.mapMode);
+  });
 });
 
 segments.forEach(segment => {
@@ -181,6 +202,7 @@ function renderDashboard() {
   const estimatedSavings = Math.round(liters * 0.022);
 
   renderHomeStats(open, liters, urgent, resolved, estimatedSavings);
+  updateMapMarkers();
 
   stats.innerHTML = `
     <div class="stat"><strong>Total</strong><p>${total}</p></div>
@@ -274,6 +296,234 @@ async function updateStatus(id, status) {
   }
 }
 
+async function loadConfig() {
+  if (appConfig) return appConfig;
+  try {
+    const response = await fetch('/api/config');
+    appConfig = await response.json();
+  } catch {
+    appConfig = {
+      mapa_provider: 'openstreetmap',
+      campus: { lat: -20.5032738, lng: -54.6134936, zoom: 16 }
+    };
+  }
+  return appConfig;
+}
+
+async function initMapExperience() {
+  const config = await loadConfig();
+  setMapMode('osm');
+  initOsmMap(config);
+  updateMapMarkers();
+}
+
+function setMapMode(mode) {
+  const targetMode = mode === 'campus' ? 'campus' : 'osm';
+
+  mapModeButtons.forEach(button => {
+    button.classList.toggle('active', button.dataset.mapMode === targetMode);
+  });
+
+  if (osmMapView && campusMapView) {
+    osmMapView.classList.toggle('hidden', targetMode !== 'osm');
+    campusMapView.classList.toggle('hidden', targetMode !== 'campus');
+  }
+
+  if (mapProviderLabel) {
+    mapProviderLabel.textContent = targetMode === 'osm'
+      ? 'OpenStreetMap + Leaflet, sem cadastro'
+      : 'Mapa oficial UFMS com pontos do MVP';
+  }
+
+  if (targetMode === 'osm') {
+    initOsmMap(appConfig || {});
+    setTimeout(() => {
+      if (osmMap) osmMap.invalidateSize();
+      renderOsmMarkers();
+    }, 120);
+  }
+
+  if (targetMode === 'campus') {
+    renderCampusMarkers();
+  }
+}
+
+function showMapUnavailable() {
+  if (mapUnavailable) {
+    mapUnavailable.classList.remove('hidden');
+  }
+  if (osmMapElement) {
+    osmMapElement.classList.add('muted-map');
+  }
+  if (mapProviderLabel) {
+    mapProviderLabel.textContent = 'Modo apoio: mapa oficial UFMS';
+  }
+}
+
+function initOsmMap(config = {}) {
+  if (!osmMapElement || osmMap) return;
+
+  if (!window.L) {
+    showMapUnavailable();
+    setMapMode('campus');
+    return;
+  }
+
+  const center = [
+    Number(config.campus?.lat || -20.5032738),
+    Number(config.campus?.lng || -54.6134936)
+  ];
+
+  osmMap = L.map(osmMapElement, {
+    zoomControl: true,
+    attributionControl: true,
+    scrollWheelZoom: true
+  }).setView(center, Number(config.campus?.zoom || 16));
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(osmMap);
+
+  osmMarkersLayer = L.layerGroup().addTo(osmMap);
+
+  if (mapUnavailable) mapUnavailable.classList.add('hidden');
+  if (osmMapElement) osmMapElement.classList.remove('muted-map');
+
+  renderOsmMarkers();
+}
+
+function updateMapMarkers() {
+  renderCampusMarkers();
+  renderOsmMarkers();
+}
+
+function buildMapData() {
+  const grouped = new Map();
+
+  occurrences.forEach(item => {
+    const point = resolveCampusPoint(item.local);
+    const key = point.key;
+    const current = grouped.get(key) || {
+      ...point,
+      count: 0,
+      liters: 0,
+      urgent: 0,
+      items: []
+    };
+
+    current.count += 1;
+    current.liters += Number(item.litros_por_dia_estimados || 0);
+    current.urgent += ['Urgente', 'Alta'].includes(item.prioridade) ? 1 : 0;
+    current.items.push(item);
+    grouped.set(key, current);
+  });
+
+  if (!grouped.size) {
+    return [
+      {
+        key: 'demo-centro',
+        label: 'Centro do campus',
+        count: 0,
+        liters: 0,
+        urgent: 0,
+        lat: -20.5032738,
+        lng: -54.6134936,
+        x: 57,
+        y: 48,
+        items: []
+      }
+    ];
+  }
+
+  return [...grouped.values()];
+}
+
+function resolveCampusPoint(local) {
+  const text = slug(local);
+
+  const points = [
+    { key: 'biblioteca', terms: ['biblioteca'], label: 'Biblioteca Central', lat: -20.50095, lng: -54.61172, x: 66, y: 36 },
+    { key: 'restaurante', terms: ['restaurante', 'ru', 'universitario'], label: 'Restaurante Universitário', lat: -20.50542, lng: -54.61598, x: 47, y: 60 },
+    { key: 'facom', terms: ['facom', 'computacao'], label: 'Facom', lat: -20.50616, lng: -54.61389, x: 53, y: 62 },
+    { key: 'faeng', terms: ['faeng', 'engenharia'], label: 'Faeng', lat: -20.50652, lng: -54.61294, x: 57, y: 65 },
+    { key: 'inqui', terms: ['inqui', 'quimica'], label: 'Inqui', lat: -20.50858, lng: -54.61945, x: 32, y: 73 },
+    { key: 'laboratorios', terms: ['laboratorio', 'laboratorio-2', 'laboratorios'], label: 'Laboratórios', lat: -20.50023, lng: -54.61655, x: 43, y: 28 },
+    { key: 'hospital', terms: ['hospital', 'hu'], label: 'Hospital Universitário', lat: -20.50256, lng: -54.61929, x: 31, y: 39 },
+    { key: 'reitoria', terms: ['reitoria', 'proece', 'proaes'], label: 'Reitoria e pró-reitorias', lat: -20.49945, lng: -54.61395, x: 55, y: 25 },
+    { key: 'famed', terms: ['famed', 'medicina'], label: 'Famed', lat: -20.50115, lng: -54.61403, x: 53, y: 36 },
+    { key: 'bloco-7', terms: ['bloco-7', 'bloco-7,', 'bloco 7', 'banheiro'], label: 'Bloco 7 e banheiros', lat: -20.50462, lng: -54.61333, x: 56, y: 52 },
+    { key: 'administrativo', terms: ['administrativa', 'administrativo', 'sala-administrativa'], label: 'Área administrativa', lat: -20.50018, lng: -54.61462, x: 51, y: 31 },
+    { key: 'bebedouro', terms: ['bebedouro', 'filtro', 'purificador'], label: 'Pontos de bebedouro', lat: -20.50400, lng: -54.61238, x: 60, y: 51 },
+    { key: 'esportes', terms: ['estadio', 'moreninho', 'ginasio', 'esportivo'], label: 'Complexo esportivo', lat: -20.50455, lng: -54.60986, x: 72, y: 56 },
+    { key: 'inma', terms: ['inma', 'matematica'], label: 'Inma', lat: -20.50585, lng: -54.61114, x: 67, y: 61 },
+    { key: 'infi', terms: ['infi', 'fisica'], label: 'Infi', lat: -20.50566, lng: -54.61172, x: 64, y: 60 }
+  ];
+
+  const found = points.find(point => point.terms.some(term => text.includes(term)));
+  if (found) return found;
+
+  return {
+    key: `geral-${text.slice(0, 24) || 'campus'}`,
+    label: local || 'Campus UFMS',
+    lat: -20.5032738,
+    lng: -54.6134936,
+    x: 57,
+    y: 48
+  };
+}
+
+function renderCampusMarkers() {
+  if (!campusMarkers) return;
+
+  const data = buildMapData();
+  campusMarkers.innerHTML = data.map(point => {
+    const tone = point.urgent > 0 ? 'red' : point.count > 1 ? 'orange' : 'blue';
+    const label = point.count || '•';
+    return `
+      <button class="campus-marker ${tone}" style="left:${point.x}%; top:${point.y}%;" type="button" title="${escapeHtml(point.label)}">
+        <span>${label}</span>
+        <small>${escapeHtml(point.label)}</small>
+      </button>
+    `;
+  }).join('');
+}
+
+function renderOsmMarkers() {
+  if (!osmMap || !window.L || !osmMarkersLayer) return;
+
+  osmMarkersLayer.clearLayers();
+  const data = buildMapData();
+  const bounds = [];
+
+  data.forEach(point => {
+    const tone = point.urgent > 0 ? 'red' : point.count > 1 ? 'orange' : 'blue';
+    const label = point.count || '•';
+    const icon = L.divIcon({
+      className: 'aquaia-marker-icon',
+      html: `<div class="aquaia-marker ${tone}">${label}</div>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 17]
+    });
+
+    const marker = L.marker([point.lat, point.lng], { icon }).addTo(osmMarkersLayer);
+    marker.bindPopup(`
+      <div class="leaflet-info-window">
+        <strong>${escapeHtml(point.label)}</strong>
+        <p>${point.count} ocorrência(s) mapeada(s)</p>
+        <p>${formatNumber(point.liters)} L/dia estimados</p>
+        ${point.items.slice(0, 3).map(item => `<small>${escapeHtml(item.tipo_ocorrencia)} · ${escapeHtml(item.prioridade)}</small>`).join('')}
+      </div>
+    `);
+    bounds.push([point.lat, point.lng]);
+  });
+
+  if (bounds.length > 1) {
+    osmMap.fitBounds(bounds, { padding: [44, 44], maxZoom: 17 });
+  }
+}
+
+
 function iconForOccurrence(type) {
   const value = slug(type);
   if (value.includes('infiltra')) return '▧';
@@ -306,5 +556,6 @@ refreshBtn.addEventListener('click', loadOccurrences);
 searchInput.addEventListener('input', renderDashboard);
 statusFilter.addEventListener('change', renderDashboard);
 
+loadConfig();
 checkHealth();
 loadOccurrences();

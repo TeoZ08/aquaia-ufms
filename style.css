@@ -723,3 +723,279 @@ input:focus, textarea:focus, select:focus { border-color: var(--blue); box-shado
   }
   .screen { height: auto; }
 }
+
+/* Mapa real e mapa oficial UFMS */
+.real-map-card {
+  padding: 14px;
+  overflow: hidden;
+}
+
+.map-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.map-toolbar strong {
+  display: block;
+  font-size: 1.02rem;
+  letter-spacing: -.03em;
+}
+
+.map-toolbar span {
+  display: block;
+  color: var(--muted);
+  font-size: .82rem;
+  margin-top: 2px;
+}
+
+.map-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  flex-shrink: 0;
+}
+
+.map-mode {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 11px;
+  background: transparent;
+  color: #66758c;
+  font-size: .78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.map-mode.active {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(11, 142, 243, .22);
+}
+
+.osm-map-view,
+.campus-image-map {
+  position: relative;
+  width: 100%;
+  min-height: 470px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #e9f5fb;
+  border: 1px solid var(--line);
+}
+
+.osm-map {
+  position: absolute;
+  inset: 0;
+  min-height: 470px;
+}
+
+.osm-map.muted-map {
+  background: linear-gradient(135deg, #e9f7ff, #f8fcff);
+}
+
+.osm-map .leaflet-control-attribution {
+  font-size: .66rem;
+}
+
+.leaflet-div-icon.aquaia-marker-icon {
+  border: 0;
+  background: transparent;
+}
+
+.aquaia-marker {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(15, 44, 75, .26);
+  border: 3px solid rgba(255,255,255,.92);
+}
+
+.aquaia-marker.blue { background: var(--blue); }
+.aquaia-marker.orange { background: var(--orange); }
+.aquaia-marker.red { background: var(--red); }
+
+.leaflet-popup-content-wrapper {
+  border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(15, 44, 75, .18);
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px;
+}
+
+.map-unavailable {
+  position: absolute;
+  inset: 18px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 24px;
+  border: 1px dashed rgba(11, 142, 243, .30);
+  border-radius: 20px;
+  background: rgba(255,255,255,.88);
+  z-index: 2;
+}
+
+.map-unavailable strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.map-unavailable p {
+  max-width: 420px;
+  margin: 0 auto 16px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.secondary-action {
+  border: 0;
+  border-radius: 14px;
+  padding: 11px 16px;
+  background: var(--dark);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.campus-image-map img {
+  width: 100%;
+  height: 100%;
+  min-height: 470px;
+  object-fit: cover;
+  display: block;
+  filter: saturate(.98) contrast(.98);
+}
+
+.campus-markers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.campus-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.campus-marker span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(15, 44, 75, .26);
+  border: 3px solid rgba(255,255,255,.92);
+}
+
+.campus-marker.blue span { background: var(--blue); }
+.campus-marker.orange span { background: var(--orange); }
+.campus-marker.red span { background: var(--red); }
+
+.campus-marker small {
+  position: absolute;
+  left: 50%;
+  top: 39px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(14, 23, 40, .88);
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 800;
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.campus-marker:hover small,
+.campus-marker:focus-visible small {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+}
+
+.map-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 4px 0;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.leaflet-info-window {
+  min-width: 190px;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.leaflet-info-window strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #101827;
+}
+
+.leaflet-info-window p {
+  margin: 3px 0;
+  color: #4d5d73;
+}
+
+.leaflet-info-window small {
+  display: block;
+  margin-top: 4px;
+  color: #0b8ef3;
+}
+
+@media (max-width: 700px) {
+  .map-toolbar {
+    flex-direction: column;
+  }
+
+  .map-toggle {
+    width: 100%;
+  }
+
+  .map-mode {
+    flex: 1;
+  }
+
+  .osm-map-view,
+  .campus-image-map,
+  .osm-map,
+  .campus-image-map img {
+    min-height: 390px;
+  }
+
+  .campus-image-map img {
+    object-fit: contain;
+    background: #eaf6fc;
+  }
+
+  .map-caption {
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+/* O mapa oficial deve aparecer inteiro, sem corte. */
+.campus-image-map img {
+  object-fit: contain;
+  background: #eaf6fc;
+}

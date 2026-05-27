@@ -322,6 +322,21 @@ def health():
     })
 
 
+@app.route("/api/config")
+def client_config():
+    return jsonify({
+        "mapa_provider": "openstreetmap_leaflet",
+        "mapa_cadastro": "nao_requerido",
+        "campus": {
+            "nome": "Cidade Universitária UFMS",
+            "cidade": "Campo Grande, MS",
+            "lat": float(os.getenv("UFMS_MAP_LAT", "-20.5032738")),
+            "lng": float(os.getenv("UFMS_MAP_LNG", "-54.6134936")),
+            "zoom": int(os.getenv("UFMS_MAP_ZOOM", "16"))
+        }
+    })
+
+
 @app.route("/api/ocorrencias", methods=["GET"])
 def list_occurrences():
     with get_db() as conn:
