@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AquaIA UFMS</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Hackathon Núcleo de Formação Cidadã</p>
+      <h1>AquaIA UFMS</h1>
+      <p class="subtitle">Inteligência artificial para monitorar e reduzir desperdícios de água.</p>
+    </div>
+    <div class="status-chip" id="geminiStatus">Verificando IA...</div>
+  </header>
+
+  <main class="shell">
+    <section class="hero-card">
+      <div>
+        <p class="eyebrow">MVP funcional</p>
+        <h2>Registre uma ocorrência hídrica e veja a análise automática.</h2>
+        <p>O protótipo classifica o tipo de problema, estima gravidade, prioridade, litros desperdiçados por dia e ação sugerida para manutenção.</p>
+      </div>
+      <button class="primary" data-scroll="form-card">Registrar ocorrência</button>
+    </section>
+
+    <nav class="tabs" aria-label="Navegação principal">
+      <button class="tab active" data-tab="registro">Registrar</button>
+      <button class="tab" data-tab="painel">Painel</button>
+      <button class="tab" data-tab="sobre">Sobre</button>
+    </nav>
+
+    <section id="registro" class="tab-panel active">
+      <article class="card" id="form-card">
+        <div class="section-title">
+          <span>1</span>
+          <div>
+            <h2>Nova ocorrência</h2>
+            <p>Informe o local, descreva o problema e envie uma foto, se tiver.</p>
+          </div>
+        </div>
+
+        <form id="occurrenceForm" class="form">
+          <label>
+            Local da ocorrência
+            <input name="local" placeholder="Ex.: Bloco 7, banheiro térreo" required />
+          </label>
+
+          <label>
+            Tipo de ambiente
+            <select name="ambiente" required>
+              <option value="">Selecione</option>
+              <option>Banheiro</option>
+              <option>Laboratório</option>
+              <option>Sala de aula</option>
+              <option>Área administrativa</option>
+              <option>Área externa</option>
+              <option>Bebedouro</option>
+              <option>Outro</option>
+            </select>
+          </label>
+
+          <label>
+            Descrição do problema
+            <textarea name="descricao" rows="4" placeholder="Ex.: Torneira pingando continuamente há dois dias." required></textarea>
+          </label>
+
+          <label class="upload-box">
+            <input type="file" name="imagem" accept="image/png,image/jpeg,image/webp" />
+            <span>Enviar foto da ocorrência</span>
+            <small>PNG, JPG ou WEBP. A IA analisará apenas a infraestrutura.</small>
+          </label>
+
+          <div id="imagePreview" class="preview hidden"></div>
+
+          <button class="primary full" type="submit">Analisar com IA</button>
+        </form>
+      </article>
+
+      <article class="card hidden" id="resultCard">
+        <div class="section-title">
+          <span>2</span>
+          <div>
+            <h2>Resultado da análise</h2>
+            <p>Esta leitura será salva no painel para acompanhamento.</p>
+          </div>
+        </div>
+        <div id="analysisResult" class="analysis-grid"></div>
+      </article>
+    </section>
+
+    <section id="painel" class="tab-panel">
+      <article class="card">
+        <div class="section-title between">
+          <div class="title-inline">
+            <span>3</span>
+            <div>
+              <h2>Painel de manutenção</h2>
+              <p>Visão consolidada das ocorrências e do impacto estimado.</p>
+            </div>
+          </div>
+          <button class="secondary" id="refreshBtn">Atualizar</button>
+        </div>
+
+        <div class="stats" id="stats"></div>
+        <div class="filters">
+          <input id="searchInput" placeholder="Filtrar por local, tipo ou status" />
+          <select id="statusFilter">
+            <option value="">Todos os status</option>
+            <option>Aberto</option>
+            <option>Em análise</option>
+            <option>Resolvido</option>
+          </select>
+        </div>
+        <div id="occurrenceList" class="occurrence-list"></div>
+      </article>
+    </section>
+
+    <section id="sobre" class="tab-panel">
+      <article class="card about-card">
+        <p class="eyebrow">Conceito do projeto</p>
+        <h2>Plataforma de inteligência hídrica participativa</h2>
+        <p>O AquaIA UFMS transforma a comunidade universitária em agente de sustentabilidade. O usuário registra vazamentos, infiltrações, descargas com fluxo contínuo ou oportunidades de reaproveitamento, e a IA ajuda a classificar e priorizar o atendimento.</p>
+        <div class="about-grid">
+          <div>
+            <strong>ODS principal</strong>
+            <p>ODS 6, água potável e saneamento.</p>
+          </div>
+          <div>
+            <strong>MVP</strong>
+            <p>Teste inicial em um bloco ou setor da UFMS.</p>
+          </div>
+          <div>
+            <strong>Expansão</strong>
+            <p>Aplicação futura em outros câmpus, escolas e prédios públicos.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/script.js"></script>
+</body>
+</html>
