@@ -11,41 +11,131 @@
 <body>
   <main class="device-shell" aria-label="Protótipo AquaIA UFMS">
     <section class="phone-frame">
-      <section id="dashboard" class="screen active">
-        <header class="app-topbar">
-          <div>
-            <p class="mini-label">Campus Cidade Universitária</p>
-            <h2>Olá, equipe! 👋</h2>
-          </div>
-          <button class="icon-button" type="button" aria-label="Status da IA">
-            <span id="geminiStatus">IA</span>
-          </button>
-        </header>
+      <header class="desktop-topbar" aria-label="Navegação principal">
+        <button class="brand-mini tab active" type="button" data-tab="dashboard">
+          <span class="brand-symbol" aria-hidden="true">
+            <svg viewBox="0 0 48 48">
+              <path d="M24 4c-7 9-13 17-13 26a13 13 0 0 0 26 0C37 21 31 13 24 4Z" fill="currentColor"/>
+              <path d="M16 31c5 4 12 5 18 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+              <path d="M19 37c3 2 7 2 10 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>
+            </svg>
+          </span>
+          <span>AquaIA UFMS</span>
+        </button>
+        <nav class="top-nav" aria-label="Seções do produto">
+          <button class="tab active" type="button" data-tab="dashboard">Início</button>
+          <button class="tab" type="button" data-tab="painel">Ocorrências</button>
+          <button class="tab" type="button" data-tab="mapa">Mapa</button>
+          <button class="tab" type="button" data-tab="sobre">Sobre</button>
+        </nav>
+      </header>
 
-        <section class="content-block">
-          <div class="section-head">
-            <div>
-              <h3>Panorama de hoje</h3>
-              <p>Atualizado em tempo real pelo protótipo.</p>
+      <section id="dashboard" class="screen active">
+        <div class="dashboard-grid">
+          <section class="hero-card">
+            <div class="hero-copy">
+              <div class="hero-badges" aria-label="Selos do projeto">
+                <span>MVP Hackathon UFMS</span>
+                <span>ODS 6</span>
+              </div>
+              <div class="brand-lockup hero-brand">
+                <div class="logo-mark" aria-hidden="true">
+                  <svg viewBox="0 0 96 96" role="img">
+                    <path d="M48 7C34 25 21 42 21 59c0 17 12 30 27 30s27-13 27-30C75 42 62 25 48 7Z" fill="#138FF2"/>
+                    <path d="M29 64c9 6 24 8 39 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M36 73c8 3 17 3 25 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".82"/>
+                  </svg>
+                </div>
+                <div>
+                  <h1>Aqua<span>IA</span> UFMS</h1>
+                  <strong>Inteligência hídrica para um campus sustentável</strong>
+                </div>
+              </div>
+              <p>Registre vazamentos, acompanhe pontos críticos e use IA para priorizar ações de manutenção no campus.</p>
+              <div class="hero-actions">
+                <button class="primary-action compact-action" type="button" data-tab-target="registro">Registrar ocorrência</button>
+                <button class="ghost-action compact-action" type="button" data-tab-target="mapa">Ver mapa do campus</button>
+              </div>
+              <div class="ai-status-pill" aria-label="Status da análise por IA">
+                <span class="status-dot" aria-hidden="true"></span>
+                <strong id="geminiStatus">Modo MVP</strong>
+              </div>
             </div>
-          </div>
+
+            <div class="hero-visual" aria-hidden="true">
+              <svg viewBox="0 0 520 360" role="img">
+                <defs>
+                  <linearGradient id="heroWater" x1="0" x2="1" y1="0" y2="1">
+                    <stop stop-color="#55C7FF"/>
+                    <stop offset="1" stop-color="#0B8EF3"/>
+                  </linearGradient>
+                  <linearGradient id="heroGlass" x1="0" x2="1">
+                    <stop stop-color="#F8FCFF"/>
+                    <stop offset="1" stop-color="#DFF3FF"/>
+                  </linearGradient>
+                </defs>
+                <path d="M35 275c72-36 118 28 192-6 74-34 113-90 250-45" fill="none" stroke="#BFEAFF" stroke-width="22" stroke-linecap="round"/>
+                <path d="M28 309c76-39 132 24 205-9 72-33 127-73 252-37" fill="none" stroke="#E5F6FF" stroke-width="16" stroke-linecap="round"/>
+                <rect x="84" y="122" width="112" height="116" rx="14" fill="url(#heroGlass)" stroke="#94D7FF" stroke-width="4"/>
+                <rect x="220" y="86" width="150" height="152" rx="16" fill="#FFFFFF" stroke="#94D7FF" stroke-width="4"/>
+                <rect x="388" y="150" width="58" height="88" rx="12" fill="#DFF3FF" stroke="#94D7FF" stroke-width="4"/>
+                <g fill="#9ADFFF">
+                  <rect x="106" y="146" width="18" height="28" rx="5"/>
+                  <rect x="138" y="146" width="18" height="28" rx="5"/>
+                  <rect x="170" y="146" width="18" height="28" rx="5"/>
+                  <rect x="246" y="112" width="22" height="34" rx="6"/>
+                  <rect x="286" y="112" width="22" height="34" rx="6"/>
+                  <rect x="326" y="112" width="22" height="34" rx="6"/>
+                  <rect x="246" y="165" width="22" height="34" rx="6"/>
+                  <rect x="286" y="165" width="22" height="34" rx="6"/>
+                  <rect x="326" y="165" width="22" height="34" rx="6"/>
+                </g>
+                <path d="M402 46c-24 32-39 53-39 76a39 39 0 0 0 78 0c0-23-15-44-39-76Z" fill="url(#heroWater)"/>
+                <path d="M382 126c13 9 31 9 44 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".9"/>
+                <path d="M75 248c-21-4-34-16-34-34 0-17 12-30 29-32 8-17 24-27 43-27 24 0 43 17 47 40 19 5 31 19 31 37 0 25-20 39-51 39H75Z" fill="#E6F9F1"/>
+                <path d="M69 247c16-18 31-31 51-48 17 16 32 30 48 49" fill="none" stroke="#19B879" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="453" cy="252" r="18" fill="#19B879" opacity=".18"/>
+                <circle cx="64" cy="112" r="14" fill="#0B8EF3" opacity=".13"/>
+                <circle cx="468" cy="93" r="9" fill="#19B879" opacity=".2"/>
+              </svg>
+            </div>
+          </section>
+
+          <section class="home-map-preview">
+            <div>
+              <p class="mini-label">Pontos críticos no campus</p>
+              <h3>Locais agrupados por ocorrência</h3>
+            </div>
+            <div id="campusPreview" class="campus-preview-list"></div>
+            <button class="filter-button full-width" type="button" data-tab-target="mapa">Abrir mapa completo</button>
+          </section>
+
+          <section class="content-block metrics-block">
+            <div class="section-head">
+              <div>
+                <h3>Panorama de hoje</h3>
+                <p>Atualizado em tempo real pelo protótipo.</p>
+              </div>
+            </div>
           <div class="metric-grid" id="homeStats">
-            <article class="metric-card"><span class="metric-icon blue">💧</span><strong>0</strong><p>Ocorrências abertas</p></article>
-            <article class="metric-card"><span class="metric-icon green">♻</span><strong>0 L</strong><p>Litros em atenção</p></article>
-            <article class="metric-card"><span class="metric-icon orange">⚠</span><strong>0</strong><p>Pontos críticos</p></article>
-            <article class="metric-card"><span class="metric-icon blue">📈</span><strong>92%</strong><p>Índice do MVP</p></article>
+            <article class="metric-card"><span class="metric-icon blue"></span><strong>0</strong><p>Ocorrências abertas</p></article>
+            <article class="metric-card"><span class="metric-icon green"></span><strong>0 L</strong><p>Litros em atenção</p></article>
+            <article class="metric-card"><span class="metric-icon orange"></span><strong>0</strong><p>Pontos críticos</p></article>
+            <article class="metric-card"><span class="metric-icon blue"></span><strong>100%</strong><p>Índice de resposta</p></article>
           </div>
         </section>
 
-        <button class="cta-card" type="button" data-tab-target="registro">
-          <span>
-            <strong>Registrar ocorrência</strong>
-            <small>Identificou vazamento, desperdício ou mau uso da água?</small>
-          </span>
-          <b aria-hidden="true">➜</b>
-        </button>
+          <section class="content-block recent-block">
+            <div class="section-head">
+              <div>
+                <h3>Ocorrências recentes</h3>
+                <p>Últimos pontos registrados no campus.</p>
+              </div>
+            </div>
+            <div id="recentOccurrences" class="recent-list"></div>
+          </section>
 
-        <section class="content-block compact">
+        <section class="content-block compact impact-block">
           <div class="section-head">
             <div>
               <h3>Impacto do mês</h3>
@@ -58,6 +148,7 @@
             <div><strong>0</strong><span>Resolvidas</span></div>
           </div>
         </section>
+        </div>
       </section>
 
       <section id="registro" class="screen">
@@ -98,7 +189,13 @@
 
           <label class="upload-tile">
             <input type="file" name="imagem" accept="image/png,image/jpeg,image/webp" />
-            <span class="upload-icon">▧</span>
+            <span class="upload-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <path d="M10 12h28a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V16a4 4 0 0 1 4-4Z" fill="none" stroke="currentColor" stroke-width="3.5"/>
+                <path d="m12 34 8-8 6 6 5-5 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="33" cy="21" r="3" fill="currentColor"/>
+              </svg>
+            </span>
             <strong>Adicionar foto</strong>
             <small>Formatos: JPG, PNG ou WEBP. Até 8 MB.</small>
           </label>
@@ -254,7 +351,7 @@
         <button class="tab" type="button" data-tab="painel"><span>◇</span>Ocorrências</button>
         <button class="tab add-tab" type="button" data-tab="registro" aria-label="Registrar ocorrência"><span>＋</span></button>
         <button class="tab" type="button" data-tab="mapa"><span>⌖</span>Mapa</button>
-        <button class="tab" type="button" data-tab="sobre"><span>○</span>Perfil</button>
+        <button class="tab" type="button" data-tab="sobre"><span>○</span>Sobre</button>
       </nav>
     </section>
   </main>

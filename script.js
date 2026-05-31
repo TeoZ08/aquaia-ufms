@@ -7,6 +7,8 @@ const occurrenceList = document.querySelector('#occurrenceList');
 const stats = document.querySelector('#stats');
 const homeStats = document.querySelector('#homeStats');
 const impactStats = document.querySelector('#impactStats');
+const recentOccurrences = document.querySelector('#recentOccurrences');
+const campusPreview = document.querySelector('#campusPreview');
 const mapLiters = document.querySelector('#mapLiters');
 const trendText = document.querySelector('#trendText');
 const barChart = document.querySelector('#barChart');
@@ -32,29 +34,91 @@ const mapProviderLabel = document.querySelector('#mapProviderLabel');
 
 const STATUSES = ['Aberto', 'Em análise', 'Resolvido'];
 const DEFAULT_CAMPUS = { lat: -20.5032738, lng: -54.6134936, zoom: 16 };
+const PRIORITY_WEIGHT = { Urgente: 4, Alta: 3, Média: 2, Baixa: 1 };
+const STATUS_WEIGHT = { Aberto: 3, 'Em análise': 2, Resolvido: 1 };
+const ICONS = {
+  drop: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M24 4c-7 9-13 18-13 27a13 13 0 0 0 26 0C37 22 31 13 24 4Z" fill="currentColor"/>
+      <path d="M16 32c5 4 12 5 17 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <path d="M20 38c3 1.8 6 1.8 9 0" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" opacity=".85"/>
+    </svg>`,
+  leak: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M13 18h14a8 8 0 0 1 8 8v3" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path d="M9 14h8v8H9z" fill="currentColor" opacity=".18"/>
+      <path d="M35 32c-3 4-5 7-5 10a5 5 0 0 0 10 0c0-3-2-6-5-10Z" fill="currentColor"/>
+      <path d="M18 25h8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    </svg>`,
+  liters: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M24 5c-8 10-14 18-14 27a14 14 0 0 0 28 0C38 23 32 15 24 5Z" fill="currentColor"/>
+      <path d="M16 31c6 5 16 5 22 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <path d="M18 38h12" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+    </svg>`,
+  critical: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M24 5 43 39H5L24 5Z" fill="currentColor" opacity=".2"/>
+      <path d="M24 5 43 39H5L24 5Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M24 17v10" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="24" cy="34" r="2.5" fill="currentColor"/>
+    </svg>`,
+  response: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M10 31c4 6 10 9 17 8 9-1 15-9 14-18" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path d="m39 11 2 10-10-1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 21c2-7 8-12 16-12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".4"/>
+    </svg>`,
+  wrench: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M31 7a10 10 0 0 0 10 13L22 39a7 7 0 0 1-10-10l19-19Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="16" cy="35" r="2.5" fill="currentColor"/>
+    </svg>`,
+  map: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M8 12 19 8l10 4 11-4v28l-11 4-10-4-11 4V12Z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M19 8v28M29 12v28" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/>
+      <path d="M31 18c0 5-7 12-7 12s-7-7-7-12a7 7 0 1 1 14 0Z" fill="currentColor"/>
+      <circle cx="24" cy="18" r="2.5" fill="#fff"/>
+    </svg>`,
+  leaf: `
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M40 8C23 8 11 18 11 31a9 9 0 0 0 9 9c13 0 20-15 20-32Z" fill="currentColor" opacity=".18"/>
+      <path d="M40 8C23 8 11 18 11 31a9 9 0 0 0 9 9c13 0 20-15 20-32Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M15 35c7-8 13-13 22-20" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+    </svg>`
+};
 const TYPE_BUCKETS = [
   { key: 'vazamento', label: 'Vazamento', color: 'var(--blue)', terms: ['vazamento', 'torneira', 'descarga', 'cano'] },
   { key: 'infiltracao', label: 'Infiltração', color: 'var(--green)', terms: ['infiltra', 'umidade', 'mofo'] },
   { key: 'reuso', label: 'Reuso', color: 'var(--orange)', terms: ['reaproveitamento', 'reuso', 'ar-condicionado', 'condensado'] },
   { key: 'outros', label: 'Outros', color: '#cbd7e2', terms: [] }
 ];
-const CAMPUS_POINTS = [
-  { key: 'biblioteca', terms: ['biblioteca'], label: 'Biblioteca Central', lat: -20.50095, lng: -54.61172, x: 66, y: 36 },
-  { key: 'restaurante', terms: ['restaurante', 'ru', 'universitario'], label: 'Restaurante Universitário', lat: -20.50542, lng: -54.61598, x: 47, y: 60 },
-  { key: 'facom', terms: ['facom', 'computacao'], label: 'Facom', lat: -20.50616, lng: -54.61389, x: 53, y: 62 },
-  { key: 'faeng', terms: ['faeng', 'engenharia'], label: 'Faeng', lat: -20.50652, lng: -54.61294, x: 57, y: 65 },
-  { key: 'inqui', terms: ['inqui', 'quimica'], label: 'Inqui', lat: -20.50858, lng: -54.61945, x: 32, y: 73 },
-  { key: 'laboratorios', terms: ['laboratorio', 'laboratorios'], label: 'Laboratórios', lat: -20.50023, lng: -54.61655, x: 43, y: 28 },
-  { key: 'hospital', terms: ['hospital', 'hu'], label: 'Hospital Universitário', lat: -20.50256, lng: -54.61929, x: 31, y: 39 },
-  { key: 'reitoria', terms: ['reitoria', 'proece', 'proaes'], label: 'Reitoria e pró-reitorias', lat: -20.49945, lng: -54.61395, x: 55, y: 25 },
-  { key: 'famed', terms: ['famed', 'medicina'], label: 'Famed', lat: -20.50115, lng: -54.61403, x: 53, y: 36 },
-  { key: 'bloco-7', terms: ['bloco-7', 'banheiro'], label: 'Bloco 7 e banheiros', lat: -20.50462, lng: -54.61333, x: 56, y: 52 },
-  { key: 'bloco-12', terms: ['bloco-12'], label: 'Bloco 12', lat: -20.50738, lng: -54.61509, x: 48, y: 67 },
-  { key: 'administrativo', terms: ['administrativa', 'administrativo', 'sala-administrativa'], label: 'Área administrativa', lat: -20.50018, lng: -54.61462, x: 51, y: 31 },
-  { key: 'bebedouro', terms: ['bebedouro', 'filtro', 'purificador'], label: 'Pontos de bebedouro', lat: -20.50400, lng: -54.61238, x: 60, y: 51 },
-  { key: 'esportes', terms: ['estadio', 'moreninho', 'ginasio', 'esportivo'], label: 'Complexo esportivo', lat: -20.50455, lng: -54.60986, x: 72, y: 56 },
-  { key: 'inma', terms: ['inma', 'matematica'], label: 'Inma', lat: -20.50585, lng: -54.61114, x: 67, y: 61 },
-  { key: 'infi', terms: ['infi', 'fisica'], label: 'Infi', lat: -20.50566, lng: -54.61172, x: 64, y: 60 }
+const CAMPUS_POINT_GROUPS = [
+  [
+    { key: 'bloco-7', terms: ['bloco-7'], label: 'Bloco 7', lat: -20.50462, lng: -54.61333, x: 56, y: 52 },
+    { key: 'bloco-12', terms: ['bloco-12'], label: 'Bloco 12', lat: -20.50738, lng: -54.61509, x: 48, y: 67 }
+  ],
+  [
+    { key: 'biblioteca', terms: ['biblioteca', 'biblioteca-central'], label: 'Biblioteca Central', lat: -20.50095, lng: -54.61172, x: 66, y: 36 },
+    { key: 'restaurante', terms: ['restaurante-universitario', 'ru'], label: 'Restaurante Universitário', lat: -20.50542, lng: -54.61598, x: 47, y: 60 },
+    { key: 'facom', terms: ['facom', 'computacao'], label: 'Facom', lat: -20.50616, lng: -54.61389, x: 53, y: 62 },
+    { key: 'faeng', terms: ['faeng', 'engenharia'], label: 'Faeng', lat: -20.50652, lng: -54.61294, x: 57, y: 65 },
+    { key: 'inqui', terms: ['inqui', 'quimica'], label: 'Inqui', lat: -20.50858, lng: -54.61945, x: 32, y: 73 },
+    { key: 'hospital', terms: ['hospital-universitario', 'hospital', 'hu'], label: 'Hospital Universitário', lat: -20.50256, lng: -54.61929, x: 31, y: 39 },
+    { key: 'reitoria', terms: ['reitoria', 'proece', 'proaes'], label: 'Reitoria e pró-reitorias', lat: -20.49945, lng: -54.61395, x: 55, y: 25 },
+    { key: 'famed', terms: ['famed', 'medicina'], label: 'Famed', lat: -20.50115, lng: -54.61403, x: 53, y: 36 },
+    { key: 'inma', terms: ['inma', 'matematica'], label: 'Inma', lat: -20.50585, lng: -54.61114, x: 67, y: 61 },
+    { key: 'infi', terms: ['infi', 'fisica'], label: 'Infi', lat: -20.50566, lng: -54.61172, x: 64, y: 60 }
+  ],
+  [
+    { key: 'laboratorios', terms: ['laboratorio', 'laboratorios'], label: 'Laboratórios', lat: -20.50023, lng: -54.61655, x: 43, y: 28 },
+    { key: 'banheiros', terms: ['banheiro', 'sanitario', 'sanitarios'], label: 'Banheiros do campus', lat: -20.50400, lng: -54.61310, x: 57, y: 50 },
+    { key: 'bebedouro', terms: ['bebedouro', 'filtro', 'purificador'], label: 'Pontos de bebedouro', lat: -20.50400, lng: -54.61238, x: 60, y: 51 },
+    { key: 'administrativo', terms: ['administrativa', 'administrativo', 'sala-administrativa'], label: 'Área administrativa', lat: -20.50018, lng: -54.61462, x: 51, y: 31 },
+    { key: 'area-externa', terms: ['area-externa', 'externa', 'jardim', 'irrigacao'], label: 'Área externa', lat: -20.50370, lng: -54.61120, x: 64, y: 49 },
+    { key: 'esportes', terms: ['estadio', 'moreninho', 'ginasio', 'esportivo'], label: 'Complexo esportivo', lat: -20.50455, lng: -54.60986, x: 72, y: 56 }
+  ]
 ];
 
 let occurrences = [];
@@ -100,7 +164,7 @@ document.addEventListener('click', event => {
   const reset = event.target.closest('[data-reset-analysis]');
   if (reset && resultCard) {
     resultCard.classList.add('hidden');
-    form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 });
 
@@ -160,7 +224,7 @@ if (form) {
         body: new FormData(form)
       });
       renderAnalysis(data);
-      resultCard?.classList.remove('hidden');
+      if (resultCard) resultCard.classList.remove('hidden');
       form.reset();
       if (descCounter) descCounter.textContent = '0/300';
       clearImagePreview();
@@ -183,7 +247,7 @@ function renderAnalysis(data) {
 
   analysisResult.innerHTML = `
     <div class="analysis-hero">
-      <div class="analysis-drop">💧</div>
+      <div class="analysis-drop">${ICONS.drop}</div>
       <div>
         <small>Classificação</small>
         <strong>${escapeHtml(data.tipo_ocorrencia)}</strong>
@@ -211,7 +275,7 @@ function renderAnalysis(data) {
     </div>
 
     <div class="recommendation">
-      <div class="tool-icon">🔧</div>
+      <div class="tool-icon">${ICONS.wrench}</div>
       <div>
         <strong>Sugestão de ação</strong>
         <p>${escapeHtml(data.acao_sugerida)}</p>
@@ -232,19 +296,25 @@ async function checkHealth() {
   if (!geminiStatus) return;
   try {
     const data = await requestJson('/api/health');
+    const statusPill = geminiStatus.closest('.ai-status-pill');
     geminiStatus.classList.remove('on', 'off');
+    if (statusPill) statusPill.classList.remove('on', 'off');
     if (data.gemini_configurado) {
-      geminiStatus.textContent = 'Gemini';
+      geminiStatus.textContent = 'IA ativa';
       geminiStatus.classList.add('on');
+      if (statusPill) statusPill.classList.add('on');
       geminiStatus.title = `Gemini ativo: ${data.modelo}`;
     } else {
-      geminiStatus.textContent = 'MVP';
+      geminiStatus.textContent = 'Modo MVP';
       geminiStatus.classList.add('off');
+      if (statusPill) statusPill.classList.add('off');
       geminiStatus.title = 'Modo fallback: regras do MVP';
     }
-  } catch {
-    geminiStatus.textContent = 'Off';
+  } catch (_error) {
+    geminiStatus.textContent = 'Modo MVP';
     geminiStatus.classList.add('off');
+    const statusPill = geminiStatus.closest('.ai-status-pill');
+    if (statusPill) statusPill.classList.add('off');
   }
 }
 
@@ -256,7 +326,7 @@ async function requestJson(url, options) {
   if (text) {
     try {
       data = JSON.parse(text);
-    } catch {
+    } catch (_error) {
       data = { erro: 'Resposta inesperada do servidor.' };
     }
   }
@@ -276,7 +346,7 @@ async function loadOccurrences() {
       const data = await requestJson('/api/ocorrencias');
       occurrences = Array.isArray(data) ? data : [];
       renderDashboard();
-    } catch {
+    } catch (_error) {
       showToast('Não foi possível carregar o painel.');
     } finally {
       occurrencesRequest = null;
@@ -298,6 +368,8 @@ function renderDashboard() {
   const estimatedSavings = Math.round(monthlyLiters * 0.022);
 
   renderHomeStats({ open, liters, urgent, resolved, total, weeklyLiters, monthlyLiters, estimatedSavings });
+  renderRecentOccurrences();
+  renderCampusPreview();
   renderInsights({ weeklyLiters, urgent, resolved });
   updateMapMarkers();
 
@@ -356,10 +428,10 @@ function renderHomeStats({ open, liters, urgent, resolved, total, monthlyLiters,
 
   if (homeStats) {
     homeStats.innerHTML = `
-      <article class="metric-card"><span class="metric-icon blue">💧</span><strong>${open}</strong><p>Ocorrências abertas</p></article>
-      <article class="metric-card"><span class="metric-icon green">♻</span><strong>${formatNumber(liters)} L</strong><p>Litros estimados por dia</p></article>
-      <article class="metric-card"><span class="metric-icon orange">⚠</span><strong>${urgent}</strong><p>Pontos críticos em atenção</p></article>
-      <article class="metric-card"><span class="metric-icon blue">📈</span><strong>${efficiency}%</strong><p>Índice de resposta</p></article>
+      <article class="metric-card"><span class="metric-icon blue">${ICONS.drop}</span><strong>${open}</strong><p>Ocorrências abertas</p><small>Demandas aguardando manutenção</small></article>
+      <article class="metric-card"><span class="metric-icon green">${ICONS.liters}</span><strong>${formatNumber(liters)} L</strong><p>Litros estimados por dia</p><small>Potencial de desperdício monitorado</small></article>
+      <article class="metric-card"><span class="metric-icon orange">${ICONS.critical}</span><strong>${urgent}</strong><p>Pontos críticos</p><small>Prioridade alta ou urgente</small></article>
+      <article class="metric-card"><span class="metric-icon blue">${ICONS.response}</span><strong>${efficiency}%</strong><p>Índice de resposta</p><small>Relação entre abertas e resolvidas</small></article>
     `;
   }
 
@@ -370,6 +442,74 @@ function renderHomeStats({ open, liters, urgent, resolved, total, monthlyLiters,
       <div><strong>${resolved}</strong><span>Ocorrências resolvidas</span></div>
     `;
   }
+}
+
+function renderRecentOccurrences() {
+  if (!recentOccurrences) return;
+
+  const latest = [...occurrences]
+    .sort((a, b) => Number(b.criado_em || 0) - Number(a.criado_em || 0))
+    .slice(0, 3);
+
+  if (!latest.length) {
+    recentOccurrences.innerHTML = `
+      <div class="home-empty-state">
+        <div class="empty-icon">${ICONS.drop}</div>
+        <p>Nenhuma ocorrência registrada ainda. Comece registrando o primeiro ponto de atenção hídrica.</p>
+        <button class="primary-action compact-action" type="button" data-tab-target="registro">Registrar ocorrência</button>
+      </div>
+    `;
+    return;
+  }
+
+  recentOccurrences.innerHTML = latest.map(item => `
+    <article class="recent-item">
+      <div class="recent-icon">${iconForOccurrence(item.tipo_ocorrencia)}</div>
+      <div>
+        <strong>${escapeHtml(item.local)}</strong>
+        <p>${escapeHtml(item.tipo_ocorrencia)}</p>
+        <div class="recent-meta">
+          <span class="badge ${slug(item.prioridade)}">${escapeHtml(item.prioridade)}</span>
+          <span class="badge blue">${formatNumber(item.litros_por_dia_estimados)} L/dia</span>
+          <span class="badge ${slug(item.status)}">${escapeHtml(item.status)}</span>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderCampusPreview() {
+  if (!campusPreview) return;
+
+  const points = buildMapData()
+    .filter(point => point.count > 0)
+    .sort((a, b) => b.urgent - a.urgent || b.count - a.count || b.liters - a.liters)
+    .slice(0, 3);
+
+  if (!points.length) {
+    campusPreview.innerHTML = `
+      <div class="preview-map-empty">
+        <span>${ICONS.map}</span>
+        <p>Sem pontos críticos cadastrados.</p>
+      </div>
+    `;
+    return;
+  }
+
+  campusPreview.innerHTML = points.map((point, index) => {
+    const tone = point.urgent > 0 ? 'red' : point.count > 1 ? 'orange' : 'blue';
+    const critical = getMostCriticalItem(point.items);
+    return `
+      <article class="campus-preview-item ${tone}">
+        <span class="preview-rank">${index + 1}</span>
+        <div>
+          <strong>${escapeHtml(point.label)}</strong>
+          <p>${point.count} ocorrência(s) · ${formatNumber(point.liters)} L/dia</p>
+          <small>${critical ? `${escapeHtml(critical.prioridade)} prioridade em ${escapeHtml(shortText(critical.tipo_ocorrencia, 42))}` : 'Sem ocorrência crítica'}</small>
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
 function renderInsights({ weeklyLiters, urgent, resolved }) {
@@ -451,8 +591,8 @@ function calculateEfficiency(total, open, urgent, resolved) {
 }
 
 function getFilteredOccurrences() {
-  const query = normalizeSearch(searchInput?.value);
-  const status = statusFilter?.value || '';
+  const query = normalizeSearch(searchInput ? searchInput.value : '');
+  const status = statusFilter ? statusFilter.value : '';
 
   return occurrences.filter(item => {
     const text = normalizeSearch(`${item.local} ${item.tipo_ocorrencia} ${item.status} ${item.descricao} ${item.gravidade}`);
@@ -480,7 +620,7 @@ async function loadConfig() {
   if (appConfig) return appConfig;
   try {
     appConfig = await requestJson('/api/config');
-  } catch {
+  } catch (_error) {
     appConfig = {
       mapa_provider: 'openstreetmap',
       campus: DEFAULT_CAMPUS
@@ -564,6 +704,11 @@ function initOsmMap(config = {}) {
   }).addTo(osmMap);
 
   osmMarkersLayer = L.layerGroup().addTo(osmMap);
+  osmMap.on('popupopen', event => {
+    const popupElement = event.popup.getElement();
+    const panelButton = popupElement ? popupElement.querySelector('[data-tab-target="painel"]') : null;
+    if (panelButton) panelButton.addEventListener('click', () => setActiveTab('painel'));
+  });
 
   if (mapUnavailable) mapUnavailable.classList.add('hidden');
   if (osmMapElement) osmMapElement.classList.remove('muted-map');
@@ -619,17 +764,44 @@ function buildMapData() {
 
 function resolveCampusPoint(local) {
   const text = slug(local);
-  const found = CAMPUS_POINTS.find(point => point.terms.some(term => text.includes(slug(term))));
-  if (found) return found;
+  for (const group of CAMPUS_POINT_GROUPS) {
+    const found = group.find(point => point.terms.some(term => matchesPointTerm(text, term)));
+    if (found) return found;
+  }
 
   return {
-    key: `geral-${text.slice(0, 24) || 'campus'}`,
-    label: local || 'Campus UFMS',
+    key: 'campus-centro',
+    label: 'Centro da Cidade Universitária',
     lat: DEFAULT_CAMPUS.lat,
     lng: DEFAULT_CAMPUS.lng,
     x: 57,
     y: 48
   };
+}
+
+function matchesPointTerm(text, term) {
+  const normalizedTerm = slug(term);
+  if (!normalizedTerm) return false;
+  if (normalizedTerm.length <= 2) {
+    return text.split('-').includes(normalizedTerm);
+  }
+  return text.includes(normalizedTerm);
+}
+
+function getMostCriticalItem(items = []) {
+  return [...items].sort((a, b) => {
+    const priorityDiff = (PRIORITY_WEIGHT[b.prioridade] || 0) - (PRIORITY_WEIGHT[a.prioridade] || 0);
+    if (priorityDiff) return priorityDiff;
+    return Number(b.litros_por_dia_estimados || 0) - Number(a.litros_por_dia_estimados || 0);
+  })[0] || null;
+}
+
+function getDominantStatus(items = []) {
+  const counts = new Map();
+  items.forEach(item => counts.set(item.status, (counts.get(item.status) || 0) + 1));
+  const dominant = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || (STATUS_WEIGHT[b[0]] || 0) - (STATUS_WEIGHT[a[0]] || 0))[0];
+  return dominant ? dominant[0] : 'Sem status';
 }
 
 function renderCampusMarkers() {
@@ -665,6 +837,8 @@ function renderOsmMarkers() {
       iconAnchor: [17, 17]
     });
 
+    const critical = getMostCriticalItem(point.items);
+    const dominantStatus = getDominantStatus(point.items);
     const itemsHtml = point.items.length
       ? point.items.slice(0, 3).map(item => `
           <small>
@@ -680,7 +854,10 @@ function renderOsmMarkers() {
         <strong>${escapeHtml(point.label)}</strong>
         <p>${point.count} ocorrência(s) mapeada(s)</p>
         <p>${formatNumber(point.liters)} L/dia estimados</p>
+        <p>Mais crítica: ${critical ? `${escapeHtml(critical.prioridade)} · ${escapeHtml(shortText(critical.tipo_ocorrencia, 44))}` : 'Sem ocorrências'}</p>
+        <p>Status predominante: ${escapeHtml(dominantStatus)}</p>
         ${itemsHtml}
+        <button class="popup-panel-link" type="button" data-tab-target="painel">Ver painel</button>
       </div>
     `);
     bounds.push([point.lat, point.lng]);
@@ -695,11 +872,11 @@ function renderOsmMarkers() {
 
 function iconForOccurrence(type) {
   const value = slug(type);
-  if (value.includes('infiltra')) return '▧';
-  if (value.includes('reaproveitamento')) return '♻';
-  if (value.includes('descarga')) return '⚠';
-  if (value.includes('bebedouro')) return '◌';
-  return '💧';
+  if (value.includes('infiltra')) return ICONS.leaf;
+  if (value.includes('reaproveitamento')) return ICONS.leaf;
+  if (value.includes('descarga')) return ICONS.critical;
+  if (value.includes('bebedouro')) return ICONS.drop;
+  return ICONS.leak;
 }
 
 function formatNumber(value) {
@@ -727,7 +904,7 @@ function shortText(value, maxLength) {
 }
 
 function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>'"]/g, char => ({
+  return String(value == null ? '' : value).replace(/[&<>'"]/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
   }[char]));
 }
@@ -745,9 +922,9 @@ function normalizeSearch(value) {
   return slug(value).replace(/-/g, ' ');
 }
 
-refreshBtn?.addEventListener('click', loadOccurrences);
-searchInput?.addEventListener('input', renderDashboard);
-statusFilter?.addEventListener('change', () => {
+if (refreshBtn) refreshBtn.addEventListener('click', loadOccurrences);
+if (searchInput) searchInput.addEventListener('input', renderDashboard);
+if (statusFilter) statusFilter.addEventListener('change', () => {
   segments.forEach(segment => {
     segment.classList.toggle('active', (segment.dataset.statusShort || '') === statusFilter.value);
   });
