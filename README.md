@@ -2,19 +2,17 @@
 
 Protótipo funcional para o Hackathon do Núcleo de Formação Cidadã da UFMS.
 
-A aplicação registra ocorrências relacionadas ao desperdício de água, permite envio de imagem, analisa com Gemini quando a API key estiver configurada, acompanha as ocorrências em um painel de manutenção e exibe os pontos em mapa real sem cadastro.
+O AquaIA é um web app responsivo para registrar desperdício de água no campus, analisar a ocorrência com IA quando houver chave Gemini, priorizar atendimento e acompanhar impacto em painel e mapa.
 
 ## O que o MVP faz
 
-- Cadastro de ocorrência com local, ambiente, descrição e imagem.
+- Cadastro de ocorrência com local, ambiente, descrição e imagem opcional.
 - Análise automática com Gemini, se `GEMINI_API_KEY` estiver configurada.
 - Fallback por regras quando não houver API key ou quando a consulta falhar.
-- Painel com ocorrências, prioridade, gravidade, estimativa de litros/dia e status.
-- Mapa real com OpenStreetMap + Leaflet, sem necessidade de cadastro ou token.
+- Painel de manutenção com prioridade, gravidade, litros/dia, status e busca.
+- Mapa real com OpenStreetMap + Leaflet, sem Google Maps, Mapbox, cadastro ou token.
 - Mapa oficial da Cidade Universitária UFMS de Campo Grande como apoio visual.
-- Marcadores dinâmicos agrupados por local no mapa real e no mapa oficial.
-- Banco SQLite local.
-- Pronto para deploy no Render.
+- Banco SQLite local, simples para MVP e deploy no Render.
 
 ## Rodando localmente
 
@@ -23,33 +21,13 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
+python app.py
 ```
 
-No Windows:
+No Windows, ative o ambiente com:
 
 ```bash
 .venv\Scripts\activate
-```
-
-Edite o arquivo `.env` e coloque sua chave Gemini:
-
-```bash
-GEMINI_API_KEY=sua_chave_do_gemini
-GEMINI_MODEL=gemini-2.5-flash
-```
-
-O mapa real usa OpenStreetMap + Leaflet e não precisa de chave de API. Estes campos são opcionais e servem apenas para ajustar o centro inicial:
-
-```bash
-UFMS_MAP_LAT=-20.5032738
-UFMS_MAP_LNG=-54.6134936
-UFMS_MAP_ZOOM=16
-```
-
-Depois rode:
-
-```bash
-python app.py
 ```
 
 Acesse:
@@ -58,24 +36,33 @@ Acesse:
 http://localhost:5000
 ```
 
+## Variáveis de ambiente
 
-5. Em Environment, adicione:
+A chave Gemini é opcional. Sem ela, o sistema continua funcionando com análise por regras.
 
 ```text
-GEMINI_API_KEY = sua_chave_do_gemini
-GEMINI_MODEL = gemini-2.5-flash
-AQUAIA_SEED_DEMO = true
-UFMS_MAP_LAT = -20.5032738
-UFMS_MAP_LNG = -54.6134936
-UFMS_MAP_ZOOM = 16
+GEMINI_API_KEY=sua_chave_do_gemini
+GEMINI_MODEL=gemini-2.5-flash
+AQUAIA_SEED_DEMO=true
+AQUAIA_ENABLE_RESET=false
+UFMS_MAP_LAT=-20.5032738
+UFMS_MAP_LNG=-54.6134936
+UFMS_MAP_ZOOM=16
+FLASK_DEBUG=false
 ```
 
-6. Faça o deploy.
+## Deploy no Render
+
+Use o `Procfile` já incluído:
+
+```text
+web: gunicorn app:app
+```
+
+No Render, configure as variáveis necessárias em Environment. Para apresentação com dados de exemplo, mantenha `AQUAIA_SEED_DEMO=true`. Não configure `FLASK_DEBUG=true` em produção.
 
 ## Observações técnicas
 
 Este MVP não treina um modelo novo com imagens. Ele usa o Gemini como modelo multimodal para interpretar imagem e descrição no momento do registro.
 
-A chave do Gemini fica somente no backend. O mapa real não usa Google Maps nem Mapbox, portanto não exige cadastro. O Leaflet carrega os blocos de mapa do OpenStreetMap diretamente no navegador.
-
-Caso o mapa externo não carregue por bloqueio de rede, o sistema ainda mantém o mapa oficial da UFMS como visual de apoio.
+A chave do Gemini fica somente no backend. O mapa real não usa Google Maps nem Mapbox; o Leaflet carrega os blocos do OpenStreetMap diretamente no navegador. Se o mapa externo não carregar, o mapa oficial da UFMS segue disponível como fallback visual.

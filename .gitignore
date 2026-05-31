@@ -1,11 +1,15 @@
 .env
 .venv/
 __pycache__/
+*.py[cod]
 *.pyc
 *.pyo
 *.pyd
+.pytest_cache/
 instance/
-uploads/
-*.db
 .DS_Store
 .vscode/
+*.db
+aquaia.db
+uploads/*
+!uploads/.gitkeep

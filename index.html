@@ -9,64 +9,9 @@
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <div class="app-bg" aria-hidden="true">
-    <span class="orb orb-one"></span>
-    <span class="orb orb-two"></span>
-  </div>
-
   <main class="device-shell" aria-label="Protótipo AquaIA UFMS">
     <section class="phone-frame">
-      <div class="statusbar" aria-hidden="true">
-        <span>9:41</span>
-        <div class="status-icons">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-
-      <section id="inicio" class="screen active">
-        <div class="welcome-screen">
-          <div class="brand-lockup">
-            <div class="logo-mark" aria-hidden="true">
-              <svg viewBox="0 0 96 96" role="img">
-                <defs>
-                  <linearGradient id="dropGradient" x1="20" x2="76" y1="8" y2="88">
-                    <stop stop-color="#61C9FF" />
-                    <stop offset="1" stop-color="#087BEA" />
-                  </linearGradient>
-                </defs>
-                <path d="M48 7C34 25 21 42 21 59c0 17 12 30 27 30s27-13 27-30C75 42 62 25 48 7Z" fill="url(#dropGradient)"/>
-                <path d="M29 64c9 6 24 8 39 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".92"/>
-                <path d="M36 73c8 3 17 3 25 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>
-              </svg>
-            </div>
-            <div>
-              <h1>Aqua<span>IA</span></h1>
-              <strong>UFMS</strong>
-            </div>
-          </div>
-
-          <p class="welcome-copy">Monitoramento inteligente para um <strong>campus sustentável.</strong></p>
-
-          <div class="campus-illustration" aria-label="Ilustração de campus com água e torre">
-            <div class="river"></div>
-            <div class="building tower"><span></span><span></span><span></span></div>
-            <div class="building main-building"><span></span><span></span><span></span><span></span></div>
-            <div class="water-tank"><span></span></div>
-            <div class="tree tree-left"></div>
-            <div class="tree tree-right"></div>
-            <div class="cloud cloud-one"></div>
-            <div class="cloud cloud-two"></div>
-          </div>
-
-          <button class="dark-cta" type="button" data-tab-target="dashboard">
-            Começar
-            <span aria-hidden="true">➜</span>
-          </button>
-          <button class="link-button" type="button" data-tab-target="sobre">Saiba mais</button>
-        </div>
-      </section>
-
-      <section id="dashboard" class="screen">
+      <section id="dashboard" class="screen active">
         <header class="app-topbar">
           <div>
             <p class="mini-label">Campus Cidade Universitária</p>
@@ -161,7 +106,7 @@
           <div id="imagePreview" class="preview hidden"></div>
 
           <button class="primary-action" type="submit">
-            ✨ Analisar com IA
+            Analisar com IA
           </button>
         </form>
 
@@ -192,9 +137,9 @@
           <button class="segment" data-status-short="Resolvido">Concluídas</button>
         </div>
 
-        <div class="hidden-controls">
-          <input id="searchInput" placeholder="Filtrar por local, tipo ou status" />
-          <select id="statusFilter">
+        <div class="panel-controls">
+          <input id="searchInput" placeholder="Filtrar por local, tipo ou status" aria-label="Filtrar ocorrências" />
+          <select id="statusFilter" aria-label="Filtrar por status">
             <option value="">Todos os status</option>
             <option>Aberto</option>
             <option>Em análise</option>
@@ -213,7 +158,7 @@
             <h2>Mapa do campus</h2>
             <p>Monitoramento em tempo real.</p>
           </div>
-          <button class="filter-button" type="button">Filtros</button>
+          <button class="filter-button" type="button" data-tab-target="painel">Ver painel</button>
         </header>
 
         <section class="campus-map-card real-map-card">
@@ -260,13 +205,13 @@
             <article class="chart-card">
               <p>Litros mapeados</p>
               <strong id="mapLiters">0 L</strong>
-              <span class="positive">+18% vs semana anterior</span>
-              <div class="bar-chart" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="positive" id="trendText">Dados do painel</span>
+              <div class="bar-chart" id="barChart" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
             </article>
             <article class="chart-card">
               <p>Ocorrências por tipo</p>
-              <div class="donut" aria-hidden="true"></div>
-              <ul class="legend">
+              <div class="donut" id="typeDonut" aria-hidden="true"></div>
+              <ul class="legend" id="typeLegend">
                 <li><span class="dot blue"></span>Vazamento</li>
                 <li><span class="dot green"></span>Infiltração</li>
                 <li><span class="dot orange"></span>Reuso</li>

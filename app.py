@@ -3,13 +3,12 @@ import os
 import re
 import sqlite3
 import time
+import unicodedata
 import uuid
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from flask import Flask, jsonify, request, send_from_directory
-from werkzeug.utils import secure_filename
-
+from flask import Flask, abort, jsonify, request, send_from_directory
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -30,6 +29,15 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
 MAX_CONTENT_LENGTH = 8 * 1024 * 1024
+MAX_FIELD_LENGTHS = {
+    "local": 120,
+    "ambiente": 60,
+    "descricao": 600
+}
+VALID_STATUSES = {"Aberto", "Em análise", "Resolvido"}
+VALID_GRAVITIES = {"Baixa", "Média", "Alta"}
+VALID_PRIORITIES = {"Baixa", "Média", "Alta", "Urgente"}
+VALID_CONFIDENCES = {"Baixa", "Média", "Alta"}
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
@@ -58,15 +66,23 @@ def init_db() -> None:
                 confianca TEXT NOT NULL,
                 acao_sugerida TEXT NOT NULL,
                 justificativa TEXT NOT NULL,
+                observacao_tecnica TEXT NOT NULL DEFAULT '',
                 fonte_analise TEXT NOT NULL,
                 status TEXT NOT NULL DEFAULT 'Aberto',
                 criado_em INTEGER NOT NULL
             )
             """
         )
+        ensure_db_columns(conn)
         count = conn.execute("SELECT COUNT(*) AS total FROM ocorrencias").fetchone()["total"]
         if count == 0 and os.getenv("AQUAIA_SEED_DEMO", "true").lower() != "false":
             seed_demo(conn)
+
+
+def ensure_db_columns(conn: sqlite3.Connection) -> None:
+    columns = {row["name"] for row in conn.execute("PRAGMA table_info(ocorrencias)").fetchall()}
+    if "observacao_tecnica" not in columns:
+        conn.execute("ALTER TABLE ocorrencias ADD COLUMN observacao_tecnica TEXT NOT NULL DEFAULT ''")
 
 
 def seed_demo(conn: sqlite3.Connection) -> None:
@@ -82,6 +98,7 @@ def seed_demo(conn: sqlite3.Connection) -> None:
             "confianca": "Média",
             "acao_sugerida": "Verificar vedação, reparo de registro ou troca de componente da torneira.",
             "justificativa": "Gotejamento contínuo em ponto de uso frequente pode gerar desperdício acumulado.",
+            "observacao_tecnica": "A estimativa considera gotejamento recorrente; confirmar vazão real durante a vistoria.",
             "fonte_analise": "Dados de demonstração"
         },
         {
@@ -95,6 +112,7 @@ def seed_demo(conn: sqlite3.Connection) -> None:
             "confianca": "Baixa",
             "acao_sugerida": "Encaminhar vistoria técnica para localizar a origem do vazamento.",
             "justificativa": "Infiltração pode indicar vazamento oculto e risco de dano estrutural ou elétrico.",
+            "observacao_tecnica": "Priorizar inspeção visual e isolamento de pontos elétricos próximos até confirmar a origem.",
             "fonte_analise": "Dados de demonstração"
         },
         {
@@ -108,6 +126,7 @@ def seed_demo(conn: sqlite3.Connection) -> None:
             "confianca": "Média",
             "acao_sugerida": "Avaliar instalação de recipiente ou tubulação simples para reuso em limpeza ou irrigação, quando viável.",
             "justificativa": "A água condensada pode ser reaproveitada em usos não potáveis, reduzindo perda de recurso.",
+            "observacao_tecnica": "Reuso deve ser limitado a fins não potáveis e com recipiente higienizado.",
             "fonte_analise": "Dados de demonstração"
         }
     ]
@@ -116,8 +135,9 @@ def seed_demo(conn: sqlite3.Connection) -> None:
             """
             INSERT INTO ocorrencias (
                 id, local, ambiente, descricao, imagem_url, tipo_ocorrencia, gravidade, prioridade,
-                litros_por_dia_estimados, confianca, acao_sugerida, justificativa, fonte_analise, status, criado_em
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                litros_por_dia_estimados, confianca, acao_sugerida, justificativa, observacao_tecnica,
+                fonte_analise, status, criado_em
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 str(uuid.uuid4()),
@@ -132,6 +152,7 @@ def seed_demo(conn: sqlite3.Connection) -> None:
                 item["confianca"],
                 item["acao_sugerida"],
                 item["justificativa"],
+                item["observacao_tecnica"],
                 item["fonte_analise"],
                 "Aberto",
                 int(time.time())
@@ -144,8 +165,33 @@ def allowed_file(filename: str) -> bool:
 
 
 def normalize_label(value: Any, allowed: set[str], default: str) -> str:
-    text = str(value or "").strip().capitalize()
-    return text if text in allowed else default
+    text = slug_text(value)
+    for option in allowed:
+        if text == slug_text(option):
+            return option
+    return default
+
+
+def slug_text(value: Any) -> str:
+    normalized = unicodedata.normalize("NFD", str(value or "").strip().lower())
+    without_accents = "".join(char for char in normalized if unicodedata.category(char) != "Mn")
+    return re.sub(r"[^a-z0-9]+", "-", without_accents).strip("-")
+
+
+def coerce_liters(value: Any, default: float = 0) -> float:
+    try:
+        liters = float(value)
+    except (TypeError, ValueError):
+        liters = default
+    return max(0.0, min(liters, 10000.0))
+
+
+def clean_text_field(name: str, value: Any) -> str:
+    text = str(value or "").strip()
+    max_length = MAX_FIELD_LENGTHS[name]
+    if len(text) > max_length:
+        raise ValueError(f"O campo {name} deve ter no máximo {max_length} caracteres.")
+    return text
 
 
 def extract_json(text: str) -> Dict[str, Any]:
@@ -214,6 +260,15 @@ def rule_based_analysis(local: str, ambiente: str, descricao: str) -> Dict[str, 
         acao = "Solicitar triagem manual da equipe responsável para confirmar tipo e gravidade."
         justificativa = "As informações indicam possível desperdício, mas não permitem classificação precisa no MVP."
 
+    observacao = {
+        "Vazamento grave": "Confirmar ponto de registro para reduzir perda antes da manutenção definitiva.",
+        "Descarga com fluxo contínuo": "Verificar mecanismo interno, boia e vedação da caixa acoplada ou válvula.",
+        "Possível infiltração": "Avaliar risco elétrico e dano estrutural antes de liberar uso normal do espaço.",
+        "Vazamento em torneira": "Comparar vazão real com a estimativa e registrar peça substituída na ordem de serviço.",
+        "Perda de água em bebedouro": "Checar conexões, pressão e drenagem para evitar reincidência em ponto de uso coletivo.",
+        "Oportunidade de reaproveitamento": "Reuso deve ser não potável e depender de rotina simples de coleta e higienização."
+    }.get(tipo, "Encaminhar para triagem técnica e complementar o registro com foto ou vistoria no local.")
+
     return {
         "tipo_ocorrencia": tipo,
         "gravidade": gravidade,
@@ -222,6 +277,7 @@ def rule_based_analysis(local: str, ambiente: str, descricao: str) -> Dict[str, 
         "confianca": "Média",
         "acao_sugerida": acao,
         "justificativa": justificativa,
+        "observacao_tecnica": observacao,
         "fonte_analise": "Regras do MVP"
     }
 
@@ -249,7 +305,8 @@ Responda somente com JSON válido, sem markdown, seguindo exatamente estes campo
   "litros_por_dia_estimados": número,
   "confianca": "Baixa, Média ou Alta",
   "acao_sugerida": "ação objetiva para a manutenção",
-  "justificativa": "explicação curta e útil para o painel"
+  "justificativa": "explicação curta e útil para o painel",
+  "observacao_tecnica": "risco, cuidado ou observação técnica curta"
 }}
 
 Regras:
@@ -274,10 +331,10 @@ Regras:
             )
         )
         data = extract_json(response.text)
-        data["gravidade"] = normalize_label(data.get("gravidade"), {"Baixa", "Média", "Alta"}, "Média")
-        data["prioridade"] = normalize_label(data.get("prioridade"), {"Baixa", "Média", "Alta", "Urgente"}, "Média")
-        data["confianca"] = normalize_label(data.get("confianca"), {"Baixa", "Média", "Alta"}, "Média")
-        data["litros_por_dia_estimados"] = float(data.get("litros_por_dia_estimados") or 0)
+        data["gravidade"] = normalize_label(data.get("gravidade"), VALID_GRAVITIES, "Média")
+        data["prioridade"] = normalize_label(data.get("prioridade"), VALID_PRIORITIES, "Média")
+        data["confianca"] = normalize_label(data.get("confianca"), VALID_CONFIDENCES, "Média")
+        data["litros_por_dia_estimados"] = coerce_liters(data.get("litros_por_dia_estimados"))
         data["fonte_analise"] = "Gemini"
         return data
     except Exception as exc:
@@ -293,7 +350,17 @@ def analyze_occurrence(local: str, ambiente: str, descricao: str, image_path: Op
     for key, value in required.items():
         if key not in data or data[key] in [None, ""]:
             data[key] = value
+    data["tipo_ocorrencia"] = str(data.get("tipo_ocorrencia", "Ocorrência hídrica"))[:90]
+    data["acao_sugerida"] = str(data.get("acao_sugerida", required["acao_sugerida"]))[:500]
+    data["justificativa"] = str(data.get("justificativa", required["justificativa"]))[:500]
+    data["observacao_tecnica"] = str(data.get("observacao_tecnica", required["observacao_tecnica"]))[:500]
+    data["litros_por_dia_estimados"] = coerce_liters(data.get("litros_por_dia_estimados"), required["litros_por_dia_estimados"])
     return data
+
+
+@app.errorhandler(413)
+def request_too_large(_error):
+    return jsonify({"erro": "A imagem enviada ultrapassa o limite de 8 MB."}), 413
 
 
 @app.route("/")
@@ -301,11 +368,15 @@ def home():
     return send_from_directory(BASE_DIR, "index.html")
 
 
-@app.route("/<path:filename>")
-def static_files(filename: str):
-    if filename in {"style.css", "script.js"}:
-        return send_from_directory(BASE_DIR, filename)
-    return send_from_directory(BASE_DIR, filename)
+@app.route("/style.css")
+@app.route("/script.js")
+def static_files():
+    return send_from_directory(BASE_DIR, request.path.lstrip("/"))
+
+
+@app.route("/assets/<path:filename>")
+def asset_file(filename: str):
+    return send_from_directory(BASE_DIR / "assets", filename)
 
 
 @app.route("/uploads/<path:filename>")
@@ -347,9 +418,12 @@ def list_occurrences():
 
 @app.route("/api/ocorrencias", methods=["POST"])
 def create_occurrence():
-    local = request.form.get("local", "").strip()
-    ambiente = request.form.get("ambiente", "").strip()
-    descricao = request.form.get("descricao", "").strip()
+    try:
+        local = clean_text_field("local", request.form.get("local"))
+        ambiente = clean_text_field("ambiente", request.form.get("ambiente"))
+        descricao = clean_text_field("descricao", request.form.get("descricao"))
+    except ValueError as exc:
+        return jsonify({"erro": str(exc)}), 400
 
     if not local or not ambiente or not descricao:
         return jsonify({"erro": "Preencha local, ambiente e descrição."}), 400
@@ -361,8 +435,7 @@ def create_occurrence():
     if file and file.filename:
         if not allowed_file(file.filename):
             return jsonify({"erro": "Envie imagem em PNG, JPG, JPEG ou WEBP."}), 400
-        safe_name = secure_filename(file.filename)
-        ext = safe_name.rsplit(".", 1)[1].lower()
+        ext = file.filename.rsplit(".", 1)[1].lower()
         final_name = f"{uuid.uuid4().hex}.{ext}"
         image_path = UPLOAD_DIR / final_name
         file.save(image_path)
@@ -380,8 +453,9 @@ def create_occurrence():
             """
             INSERT INTO ocorrencias (
                 id, local, ambiente, descricao, imagem_url, tipo_ocorrencia, gravidade, prioridade,
-                litros_por_dia_estimados, confianca, acao_sugerida, justificativa, fonte_analise, status, criado_em
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                litros_por_dia_estimados, confianca, acao_sugerida, justificativa, observacao_tecnica,
+                fonte_analise, status, criado_em
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 occurrence_id,
@@ -396,6 +470,7 @@ def create_occurrence():
                 analysis["confianca"],
                 analysis["acao_sugerida"],
                 analysis["justificativa"],
+                analysis["observacao_tecnica"],
                 analysis["fonte_analise"],
                 "Aberto",
                 created_at
@@ -419,7 +494,7 @@ def create_occurrence():
 def update_status(occurrence_id: str):
     body = request.get_json(silent=True) or {}
     status = str(body.get("status", "")).strip()
-    if status not in {"Aberto", "Em análise", "Resolvido"}:
+    if status not in VALID_STATUSES:
         return jsonify({"erro": "Status inválido."}), 400
     with get_db() as conn:
         cur = conn.execute("UPDATE ocorrencias SET status = ? WHERE id = ?", (status, occurrence_id))
@@ -430,6 +505,8 @@ def update_status(occurrence_id: str):
 
 @app.route("/api/reset-demo", methods=["POST"])
 def reset_demo():
+    if os.getenv("AQUAIA_ENABLE_RESET", "false").lower() != "true":
+        abort(404)
     with get_db() as conn:
         conn.execute("DELETE FROM ocorrencias")
         seed_demo(conn)
@@ -440,4 +517,5 @@ init_db()
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug)
