@@ -13,3 +13,4 @@ instance/
 aquaia.db
 uploads/*
 !uploads/.gitkeep
+contexto-hackathon/

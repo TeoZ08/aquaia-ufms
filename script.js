@@ -36,6 +36,20 @@ const STATUSES = ['Aberto', 'Em análise', 'Resolvido'];
 const DEFAULT_CAMPUS = { lat: -20.5032738, lng: -54.6134936, zoom: 16 };
 const PRIORITY_WEIGHT = { Urgente: 4, Alta: 3, Média: 2, Baixa: 1 };
 const STATUS_WEIGHT = { Aberto: 3, 'Em análise': 2, Resolvido: 1 };
+const WATER_TARIFF_PER_M3 = 71.03;
+const WATER_TARIFF_LABEL = 'Tarifa estimada para cálculo do MVP';
+// Valor de tarifa usado apenas para estimativa de MVP.
+// Em produção, deve ser carregado de configuração e validado com a tarifa vigente/contrato aplicável.
+const LEAK_IMPACT_PARAMS = {
+  torneira: { litersPerDay: 300, source: 'PURA-UFMS / referência técnica histórica', confidence: 'Alta' },
+  vaso_sanitario: { litersPerDay: 700, source: 'PURA-UFMS / DECA', confidence: 'Alta' },
+  descarga: { litersPerDay: 700, source: 'PURA-UFMS / DECA', confidence: 'Alta' },
+  bebedouro: { litersPerDay: 100, source: 'Estimativa conservadora do MVP', confidence: 'Média' },
+  infiltracao: { litersPerDay: 100, source: 'Estimativa heurística do MVP', confidence: 'Baixa' },
+  ar_condicionado: { litersPerDay: 20, source: 'Estimativa de reaproveitamento do MVP', confidence: 'Média' },
+  tubulacao: { litersPerDay: 1000, source: 'Estimativa conservadora para vazamento severo', confidence: 'Média' },
+  default: { litersPerDay: 100, source: 'Estimativa padrão do MVP', confidence: 'Baixa' }
+};
 const ICONS = {
   drop: `
     <svg viewBox="0 0 48 48" aria-hidden="true">
@@ -241,6 +255,9 @@ if (form) {
 
 function renderAnalysis(data) {
   if (!analysisResult) return;
+  const impactReference = getLeakImpactReference(data);
+  const litersPerDay = Number(data.litros_por_dia_estimados || impactReference.litersPerDay || 0);
+  const financialImpact = calculateFinancialImpact(litersPerDay);
   const observation = data.observacao_tecnica
     ? `<div class="technical-note"><strong>Observação técnica</strong><p>${escapeHtml(data.observacao_tecnica)}</p></div>`
     : '';
@@ -273,6 +290,8 @@ function renderAnalysis(data) {
         <strong>${escapeHtml(data.fonte_analise)}</strong>
       </div>
     </div>
+
+    ${renderImpactCalculationCard(financialImpact, impactReference)}
 
     <div class="recommendation">
       <div class="tool-icon">${ICONS.wrench}</div>
@@ -365,9 +384,9 @@ function renderDashboard() {
   const resolved = occurrences.filter(item => item.status === 'Resolvido').length;
   const weeklyLiters = liters * 7;
   const monthlyLiters = liters * 30;
-  const estimatedSavings = Math.round(monthlyLiters * 0.022);
+  const financialImpact = calculateFinancialImpact(liters);
 
-  renderHomeStats({ open, liters, urgent, resolved, total, weeklyLiters, monthlyLiters, estimatedSavings });
+  renderHomeStats({ open, liters, urgent, resolved, total, weeklyLiters, monthlyLiters, monthlyCost: financialImpact.costPerMonth });
   renderRecentOccurrences();
   renderCampusPreview();
   renderInsights({ weeklyLiters, urgent, resolved });
@@ -394,6 +413,8 @@ function renderDashboard() {
     const statusClass = slug(item.status);
     const gravityClass = slug(item.gravidade);
     const iconContent = item.imagem_url ? `<img src="${escapeHtml(item.imagem_url)}" alt="Imagem da ocorrência" />` : iconForOccurrence(item.tipo_ocorrencia);
+    const impactReference = getLeakImpactReference(item);
+    const financialImpact = calculateFinancialImpact(item.litros_por_dia_estimados || impactReference.litersPerDay);
     return `
       <article class="occurrence-card ${priorityClass}">
         <div class="occurrence-icon">${iconContent}</div>
@@ -406,6 +427,11 @@ function renderDashboard() {
             <span class="badge ${gravityClass}">${escapeHtml(item.gravidade)}</span>
             <span class="badge blue">${formatNumber(item.litros_por_dia_estimados)} L/dia</span>
             <time class="occurrence-time" datetime="${formatDatetime(item.criado_em)}">${formatDate(item.criado_em)}</time>
+          </div>
+          <div class="occurrence-impact-line">
+            <span>${formatCurrency(financialImpact.costPerMonth)}/mês</span>
+            <span>${formatCurrency(financialImpact.costPerYear)}/ano</span>
+            <small>${escapeHtml(impactReference.source)}</small>
           </div>
         </div>
         <span class="card-status badge ${statusClass}">${escapeHtml(item.status)}</span>
@@ -423,7 +449,7 @@ function renderDashboard() {
   });
 }
 
-function renderHomeStats({ open, liters, urgent, resolved, total, monthlyLiters, estimatedSavings }) {
+function renderHomeStats({ open, liters, urgent, resolved, total, monthlyLiters, monthlyCost }) {
   const efficiency = calculateEfficiency(total, open, urgent, resolved);
 
   if (homeStats) {
@@ -438,7 +464,7 @@ function renderHomeStats({ open, liters, urgent, resolved, total, monthlyLiters,
   if (impactStats) {
     impactStats.innerHTML = `
       <div><strong>${formatNumber(monthlyLiters)} L</strong><span>Litros mapeados</span></div>
-      <div><strong>R$ ${formatNumber(estimatedSavings)}</strong><span>Economia estimada</span></div>
+      <div><strong>${formatCurrency(monthlyCost)}</strong><span>Custo estimado/mês</span></div>
       <div><strong>${resolved}</strong><span>Ocorrências resolvidas</span></div>
     `;
   }
@@ -588,6 +614,73 @@ function calculateEfficiency(total, open, urgent, resolved) {
   if (!total) return 100;
   const score = 100 - (open * 4) - (urgent * 8) + (resolved * 5);
   return Math.max(45, Math.min(99, score));
+}
+
+function calculateFinancialImpact(litersPerDay) {
+  const dailyLiters = Math.max(0, Number(litersPerDay || 0));
+  const litersPerMonth = dailyLiters * 30;
+  const cubicMetersPerMonth = litersPerMonth / 1000;
+  const costPerMonth = cubicMetersPerMonth * WATER_TARIFF_PER_M3;
+  const costPerYear = costPerMonth * 12;
+
+  return {
+    litersPerDay: dailyLiters,
+    litersPerMonth,
+    cubicMetersPerMonth,
+    costPerMonth,
+    costPerYear
+  };
+}
+
+function renderImpactCalculationCard(impact, reference) {
+  return `
+    <div class="calculation-card">
+      <div class="calculation-head">
+        <div>
+          <strong>Como calculamos o impacto</strong>
+          <p>${escapeHtml(WATER_TARIFF_LABEL)}</p>
+        </div>
+        <span>${escapeHtml(reference.confidence)} confiança</span>
+      </div>
+      <div class="formula-list compact-formulas">
+        <div><span>Parâmetro</span><strong>${formatNumber(impact.litersPerDay)} L/dia</strong></div>
+        <div><span>${formatNumber(impact.litersPerDay)} L/dia &times; 30</span><strong>${formatNumber(impact.litersPerMonth)} L/mês</strong></div>
+        <div><span>${formatNumber(impact.litersPerMonth)} L &divide; 1000</span><strong>${formatDecimal(impact.cubicMetersPerMonth)} m³/mês</strong></div>
+        <div><span>${formatDecimal(impact.cubicMetersPerMonth)} m³ &times; R$ ${formatDecimal(WATER_TARIFF_PER_M3)}</span><strong>${formatCurrency(impact.costPerMonth)}/mês</strong></div>
+        <div><span>${formatCurrency(impact.costPerMonth)} &times; 12</span><strong>${formatCurrency(impact.costPerYear)}/ano</strong></div>
+      </div>
+      <p class="calculation-note">Referência: ${escapeHtml(reference.source)}. Os valores são estimativas de MVP e devem ser calibrados com medição local, tarifa vigente e contrato aplicável antes de uso operacional.</p>
+    </div>
+  `;
+}
+
+function getLeakImpactReference(data = {}) {
+  const text = slug(`${data.tipo_ocorrencia || ''} ${data.descricao || ''} ${data.ambiente || ''} ${data.local || ''}`);
+  let key = 'default';
+
+  if (text.includes('vaso-sanitario') || text.includes('sanitario') || text.includes('toalete')) {
+    key = 'vaso_sanitario';
+  } else if (text.includes('descarga')) {
+    key = 'descarga';
+  } else if (text.includes('torneira')) {
+    key = 'torneira';
+  } else if (text.includes('bebedouro') || text.includes('filtro') || text.includes('purificador')) {
+    key = 'bebedouro';
+  } else if (text.includes('infiltra') || text.includes('umidade') || text.includes('mofo')) {
+    key = 'infiltracao';
+  } else if (text.includes('ar-condicionado') || text.includes('condensado') || text.includes('reuso') || text.includes('reaproveitamento')) {
+    key = 'ar_condicionado';
+  } else if (text.includes('tubulacao') || text.includes('cano') || text.includes('reservatorio') || text.includes('rede')) {
+    key = 'tubulacao';
+  }
+
+  const params = LEAK_IMPACT_PARAMS[key] || LEAK_IMPACT_PARAMS.default;
+  return {
+    key,
+    litersPerDay: params.litersPerDay,
+    source: params.source,
+    confidence: params.confidence
+  };
 }
 
 function getFilteredOccurrences() {
@@ -881,6 +974,22 @@ function iconForOccurrence(type) {
 
 function formatNumber(value) {
   return Number(value || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+}
+
+function formatDecimal(value, maximumFractionDigits = 2) {
+  return Number(value || 0).toLocaleString('pt-BR', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits
+  });
+}
+
+function formatCurrency(value) {
+  return Number(value || 0).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 }
 
 function formatDate(timestamp) {

@@ -36,6 +36,22 @@ Acesse:
 http://localhost:5000
 ```
 
+## Rodando testes
+
+Instale as dependências de desenvolvimento:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Execute a suíte:
+
+```bash
+pytest -q
+```
+
+Os testes usam banco SQLite temporário, não chamam o Gemini e validam endpoints principais, fallback por regras, status de ocorrência, seções do HTML e sintaxe do JavaScript.
+
 ## Variáveis de ambiente
 
 A chave Gemini é opcional. Sem ela, o sistema continua funcionando com análise por regras.

@@ -619,6 +619,198 @@ input:focus, textarea:focus, select:focus { border-color: var(--blue); box-shado
 .about-grid div { padding: 13px; border: 1px solid var(--line); border-radius: 16px; background: #fbfdff; }
 .about-grid strong { display: block; margin-bottom: 3px; color: var(--blue); }
 .about-grid span { color: var(--muted); font-size: .78rem; }
+.about-card + .about-card { margin-top: 14px; }
+
+.evidence-grid,
+.contract-grid,
+.ods-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.evidence-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.contract-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ods-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.evidence-card,
+.contract-card,
+.ods-grid div {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fbfdff;
+}
+
+.evidence-card strong,
+.contract-card strong,
+.ods-grid strong {
+  display: block;
+  color: var(--blue);
+  font-size: 1.02rem;
+  line-height: 1.15;
+}
+
+.evidence-card span,
+.contract-card p,
+.ods-grid span {
+  display: block;
+  margin: 6px 0 0;
+  color: #5e6e81;
+  font-size: .74rem;
+  line-height: 1.35;
+}
+
+.contract-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: #718093;
+  font-size: .68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.contract-card strong {
+  color: #11263c;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+}
+
+.source-note {
+  margin: 12px 0 0;
+  color: #6b7b8e;
+  font-size: .73rem;
+  line-height: 1.42;
+}
+
+.narrative-card h3 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.narrative-card p {
+  margin-bottom: 12px;
+}
+
+.two-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.territorial-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.formula-list {
+  display: grid;
+  gap: 8px;
+}
+
+.formula-list div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fbfdff;
+}
+
+.formula-list span {
+  color: #617081;
+  font-size: .74rem;
+  line-height: 1.3;
+}
+
+.formula-list strong {
+  color: #16283b;
+  font-size: .78rem;
+  text-align: right;
+}
+
+.calculation-card {
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid #dceefa;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fbfdff, #eef8ff);
+}
+
+.calculation-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.calculation-head strong {
+  display: block;
+  font-size: .9rem;
+}
+
+.calculation-head p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: .72rem;
+}
+
+.calculation-head > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: var(--green);
+  background: var(--green-soft);
+  font-size: .66rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.compact-formulas div {
+  background: #fff;
+}
+
+.calculation-note {
+  margin: 10px 0 0;
+  color: #617081;
+  font-size: .72rem;
+  line-height: 1.42;
+}
+
+.occurrence-impact-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 9px;
+}
+
+.occurrence-impact-line span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #0f6db9;
+  background: var(--blue-3);
+  font-size: .68rem;
+  font-weight: 900;
+}
+
+.occurrence-impact-line small {
+  color: #718093;
+  font-size: .68rem;
+  font-weight: 800;
+}
 
 .bottom-nav {
   position: absolute;
@@ -1557,5 +1749,43 @@ body {
 
   .hero-visual {
     min-height: 190px;
+  }
+}
+
+@media (min-width: 820px) {
+  .evidence-block,
+  .finance-block {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 780px) {
+  .evidence-grid,
+  .ods-grid,
+  .territorial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .evidence-grid,
+  .contract-grid,
+  .ods-grid,
+  .two-columns,
+  .territorial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calculation-head {
+    flex-direction: column;
+  }
+
+  .formula-list div {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .formula-list strong {
+    text-align: left;
   }
 }
