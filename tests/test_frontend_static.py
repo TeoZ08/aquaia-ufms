@@ -1,5 +1,6 @@
 from pathlib import Path
 import subprocess
+import struct
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -7,6 +8,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def read(path):
     return (ROOT / path).read_text(encoding="utf-8")
+
+
+def png_info(path):
+    data = (ROOT / path).read_bytes()
+    assert data.startswith(b"\x89PNG\r\n\x1a\n")
+    assert data[12:16] == b"IHDR"
+    width, height, bit_depth, color_type = struct.unpack(">IIBB", data[16:26])
+    return width, height, bit_depth, color_type
 
 
 def test_bundled_javascript_is_valid():
@@ -22,8 +31,6 @@ def test_templates_contain_product_sections_and_brand_assets():
 
     required_text = [
         "assets/brand/02_logo_wordmark_waves_teal_ia.png",
-        "assets/brand/03_logo_wordmark_clean_navbar.png",
-        "assets/brand/05_logo_wordmark_stacked_editorial.png",
         "assets/brand/06_icon_letter_a_wave.png",
         "assets/brand/07_map_marker_typographic_a.png",
         "assets/brand/08_hero_title_inteligencia_hidrica.png",
@@ -45,6 +52,8 @@ def test_templates_contain_product_sections_and_brand_assets():
     combined = f"{base}\n{html}"
     for text in required_text:
         assert text in combined
+    assert "assets/brand/03_logo_wordmark_clean_navbar.png" not in combined
+    assert "assets/brand/05_logo_wordmark_stacked_editorial.png" not in combined
 
 
 def test_pura_ufms_is_not_in_home_before_methodology_section():
@@ -102,8 +111,20 @@ def test_tailwind_output_contains_project_components():
     assert ".aqua-number-wall" in css
     assert ".aqua-metric" in css
     assert "repeat-x" in css
-    assert "10_wave_divider_blue" in css
-    assert "11_wave_divider_teal" in css
+    assert "wave-loop-blue" in css
+    assert "wave-loop-teal" in css
+    assert "10_wave_divider_blue" not in css
+    assert "11_wave_divider_teal" not in css
+    assert "#FFFDF2" in read("static/src/input.css")
+    assert "linear-gradient(180deg, #f8fff9" not in read("static/src/input.css")
+
+
+def test_wave_loop_assets_are_transparent_rgba_tiles():
+    for asset in ["static/assets/brand/wave-loop-blue.png", "static/assets/brand/wave-loop-teal.png"]:
+        width, height, bit_depth, color_type = png_info(asset)
+        assert (width, height) == (1440, 220)
+        assert bit_depth == 8
+        assert color_type == 6
 
 
 def test_render_blueprint_matches_runtime_contract():
