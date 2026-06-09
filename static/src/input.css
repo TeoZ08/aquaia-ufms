@@ -1,0 +1,306 @@
+@import "tailwindcss";
+
+@source "../../templates/**/*.html";
+@source "./**/*.js";
+
+@theme {
+  --color-aqua-mint: #f2fff6;
+  --color-aqua-tea: #caffde;
+  --color-aqua-sky: #25c5e9;
+  --color-aqua-cyan: #238689;
+  --color-aqua-ink: #021225;
+  --color-aqua-line: #d9ece5;
+  --font-sans: "Sora", "Plus Jakarta Sans", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --shadow-aqua: 0 18px 45px rgb(2 18 37 / 0.07);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background:
+      radial-gradient(circle at 18% 0%, rgb(202 255 222 / 0.7), transparent 28rem),
+      linear-gradient(180deg, #fbfffc 0%, #f2fff6 45%, #e9fbf8 100%);
+    color: #021225;
+    font-family: var(--font-sans);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  a:focus-visible {
+    outline: 3px solid rgb(37 197 233 / 0.25);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: #caffde;
+    color: #021225;
+  }
+}
+
+@layer components {
+  .aqua-container {
+    width: min(1180px, calc(100% - 2rem));
+    margin-inline: auto;
+  }
+
+  .aqua-card {
+    border: 1px solid rgb(35 134 137 / 0.14);
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / 0.82);
+    box-shadow: var(--shadow-aqua);
+    backdrop-filter: blur(18px);
+  }
+
+  .aqua-panel {
+    border: 1px solid rgb(35 134 137 / 0.12);
+    border-radius: 1.125rem;
+    background: rgb(255 255 255 / 0.84);
+  }
+
+  .aqua-btn-primary,
+  .aqua-btn-secondary,
+  .aqua-btn-dark {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding-inline: 1.2rem;
+    font-weight: 800;
+    transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+  }
+
+  .aqua-btn-primary {
+    background: #238689;
+    color: white;
+    box-shadow: 0 14px 28px rgb(35 134 137 / 0.2);
+  }
+
+  .aqua-btn-primary:hover {
+    background: #1d7477;
+    transform: translateY(-1px);
+  }
+
+  .aqua-btn-secondary {
+    border: 1px solid rgb(35 134 137 / 0.28);
+    background: rgb(255 255 255 / 0.78);
+    color: #021225;
+  }
+
+  .aqua-btn-secondary:hover {
+    border-color: rgb(35 134 137 / 0.5);
+    background: white;
+  }
+
+  .aqua-btn-dark {
+    background: #021225;
+    color: white;
+  }
+
+  .aqua-input {
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid rgb(35 134 137 / 0.18);
+    background: rgb(255 255 255 / 0.9);
+    padding: 0.875rem 1rem;
+    color: #021225;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .aqua-input::placeholder {
+    color: #7b9093;
+  }
+
+  .aqua-input:focus {
+    border-color: #25c5e9;
+    box-shadow: 0 0 0 4px rgb(37 197 233 / 0.16);
+  }
+
+  .aqua-label {
+    display: grid;
+    gap: 0.45rem;
+    color: #15383b;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .aqua-badge {
+    display: inline-flex;
+    min-height: 1.75rem;
+    width: max-content;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding-inline: 0.7rem;
+    font-size: 0.72rem;
+    font-weight: 850;
+  }
+
+  .aqua-badge-blue {
+    background: rgb(37 197 233 / 0.14);
+    color: #146d7a;
+  }
+
+  .aqua-badge-green {
+    background: rgb(202 255 222 / 0.62);
+    color: #176b48;
+  }
+
+  .aqua-badge-orange {
+    background: #fff0df;
+    color: #a45d12;
+  }
+
+  .aqua-badge-red {
+    background: #ffe9e7;
+    color: #bd3329;
+  }
+
+  .aqua-section-title {
+    font-size: clamp(1.35rem, 2.5vw, 2rem);
+    font-weight: 850;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+
+  .aqua-muted {
+    color: #587174;
+  }
+
+  .aqua-screen {
+    display: none;
+  }
+
+  .aqua-screen.is-active {
+    display: block;
+    animation: aquaFadeUp 180ms ease-out;
+  }
+
+  .aqua-tab.is-active {
+    background: #238689;
+    color: white;
+  }
+
+  .aqua-bottom-tab.is-active {
+    color: #238689;
+  }
+
+  .aqua-bottom-tab.is-active span {
+    color: white;
+    background: #238689;
+  }
+
+  .aqua-map {
+    min-height: 25rem;
+  }
+
+  .aqua-leaflet-marker {
+    position: relative;
+    display: grid;
+    width: 2.65rem;
+    height: 2.65rem;
+    place-items: center;
+    border-radius: 999px;
+    background: white;
+    box-shadow: 0 14px 30px rgb(2 18 37 / 0.24);
+  }
+
+  .aqua-leaflet-marker::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--aqua-marker-url) center / contain no-repeat;
+  }
+
+  .aqua-leaflet-marker::after {
+    content: "";
+    position: absolute;
+    inset: -0.22rem;
+    border: 3px solid var(--aqua-marker-ring, #238689);
+    border-radius: 999px;
+  }
+
+  .aqua-leaflet-marker span {
+    position: absolute;
+    right: -0.22rem;
+    top: -0.22rem;
+    z-index: 2;
+    display: grid;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--aqua-marker-ring, #238689);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 900;
+  }
+
+  .aqua-campus-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border: 3px solid white;
+    border-radius: 999px;
+    background: var(--aqua-marker-ring, #238689);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 900;
+    box-shadow: 0 12px 26px rgb(2 18 37 / 0.25);
+  }
+
+  .aqua-campus-marker small {
+    position: absolute;
+    left: 50%;
+    top: 2.75rem;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    border-radius: 999px;
+    background: rgb(2 18 37 / 0.9);
+    padding: 0.3rem 0.55rem;
+    color: white;
+    font-size: 0.68rem;
+    opacity: 0;
+    transition: opacity 160ms ease;
+  }
+
+  .aqua-campus-marker:hover small,
+  .aqua-campus-marker:focus-visible small {
+    opacity: 1;
+  }
+}
+
+@keyframes aquaFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(0.45rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

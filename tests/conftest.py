@@ -11,6 +11,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("AQUAIA_SEED_DEMO", "false")
     monkeypatch.setenv("GEMINI_API_KEY", "")
     monkeypatch.setenv("AQUAIA_ENABLE_RESET", "false")
+    monkeypatch.setenv("TARIFA_M3_ESTIMADA", "71.03")
     monkeypatch.setattr(aquaia, "DB_PATH", tmp_path / "aquaia-test.db")
     monkeypatch.setattr(aquaia, "UPLOAD_DIR", tmp_path / "uploads")
     monkeypatch.setattr(aquaia, "gemini_analysis", lambda *args, **kwargs: None)

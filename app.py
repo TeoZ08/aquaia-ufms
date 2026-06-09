@@ -8,7 +8,7 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from flask import Flask, abort, jsonify, request, send_from_directory
+from flask import Flask, abort, jsonify, render_template, request, send_from_directory
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -38,6 +38,7 @@ VALID_STATUSES = {"Aberto", "Em análise", "Resolvido"}
 VALID_GRAVITIES = {"Baixa", "Média", "Alta"}
 VALID_PRIORITIES = {"Baixa", "Média", "Alta", "Urgente"}
 VALID_CONFIDENCES = {"Baixa", "Média", "Alta"}
+DEFAULT_TARIFF_PER_M3 = 71.03
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
@@ -184,6 +185,47 @@ def coerce_liters(value: Any, default: float = 0) -> float:
     except (TypeError, ValueError):
         liters = default
     return max(0.0, min(liters, 10000.0))
+
+
+def estimated_tariff_per_m3() -> float:
+    raw_value = os.getenv("TARIFA_M3_ESTIMADA", str(DEFAULT_TARIFF_PER_M3))
+    try:
+        return max(0.0, float(str(raw_value).replace(",", ".")))
+    except (TypeError, ValueError):
+        return DEFAULT_TARIFF_PER_M3
+
+
+def calcular_impacto(litros_dia: Any, tarifa_m3: Optional[float] = None) -> Dict[str, float]:
+    daily_liters = coerce_liters(litros_dia)
+    tariff = estimated_tariff_per_m3() if tarifa_m3 is None else max(0.0, float(tarifa_m3))
+    litros_mes = daily_liters * 30
+    m3_mes = litros_mes / 1000
+    custo_mes = m3_mes * tariff
+    custo_ano = custo_mes * 12
+    return {
+        "litros_dia": daily_liters,
+        "litros_mes": litros_mes,
+        "m3_mes": m3_mes,
+        "custo_mes": custo_mes,
+        "custo_ano": custo_ano,
+        "tarifa_m3": tariff,
+    }
+
+
+def campus_map_config() -> Dict[str, Any]:
+    return {
+        "nome": "Cidade Universitária UFMS",
+        "cidade": "Campo Grande, MS",
+        "lat": float(os.getenv("UFMS_MAP_LAT", "-20.5032738")),
+        "lng": float(os.getenv("UFMS_MAP_LNG", "-54.6134936")),
+        "zoom": int(os.getenv("UFMS_MAP_ZOOM", "16")),
+    }
+
+
+def occurrence_to_dict(row: sqlite3.Row | Dict[str, Any]) -> Dict[str, Any]:
+    data = dict(row)
+    data.update(calcular_impacto(data.get("litros_por_dia_estimados", 0)))
+    return data
 
 
 def clean_text_field(name: str, value: Any) -> str:
@@ -365,18 +407,35 @@ def request_too_large(_error):
 
 @app.route("/")
 def home():
-    return send_from_directory(BASE_DIR, "index.html")
+    return render_template(
+        "index.html",
+        tariff_per_m3=estimated_tariff_per_m3(),
+        campus_map=campus_map_config(),
+    )
 
 
 @app.route("/style.css")
+def legacy_style_file():
+    return send_from_directory(BASE_DIR / "static" / "dist", "output.css")
+
+
 @app.route("/script.js")
-def static_files():
-    return send_from_directory(BASE_DIR, request.path.lstrip("/"))
+def legacy_script_file():
+    return send_from_directory(BASE_DIR / "static" / "dist", "app.js")
 
 
 @app.route("/assets/<path:filename>")
 def asset_file(filename: str):
-    return send_from_directory(BASE_DIR / "assets", filename)
+    static_assets = BASE_DIR / "static" / "assets"
+    candidates = [static_assets / filename]
+    if filename.startswith("brand/"):
+        candidates.append(static_assets / "logo" / filename.removeprefix("brand/"))
+    candidates.append(static_assets / "maps" / filename)
+
+    for candidate in candidates:
+        if candidate.is_file():
+            return send_from_directory(candidate.parent, candidate.name)
+    abort(404)
 
 
 @app.route("/uploads/<path:filename>")
@@ -398,13 +457,8 @@ def client_config():
     return jsonify({
         "mapa_provider": "openstreetmap_leaflet",
         "mapa_cadastro": "nao_requerido",
-        "campus": {
-            "nome": "Cidade Universitária UFMS",
-            "cidade": "Campo Grande, MS",
-            "lat": float(os.getenv("UFMS_MAP_LAT", "-20.5032738")),
-            "lng": float(os.getenv("UFMS_MAP_LNG", "-54.6134936")),
-            "zoom": int(os.getenv("UFMS_MAP_ZOOM", "16"))
-        }
+        "tarifa_m3_estimada": estimated_tariff_per_m3(),
+        "campus": campus_map_config()
     })
 
 
@@ -412,7 +466,7 @@ def client_config():
 def list_occurrences():
     with get_db() as conn:
         rows = conn.execute("SELECT * FROM ocorrencias ORDER BY criado_em DESC").fetchall()
-        data = [dict(row) for row in rows]
+        data = [occurrence_to_dict(row) for row in rows]
     return jsonify(data)
 
 
@@ -487,6 +541,7 @@ def create_occurrence():
         "criado_em": created_at,
         **analysis
     }
+    result.update(calcular_impacto(analysis["litros_por_dia_estimados"]))
     return jsonify(result), 201
 
 
