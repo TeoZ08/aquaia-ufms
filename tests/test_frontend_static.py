@@ -95,9 +95,13 @@ def test_tailwind_output_contains_project_components():
     assert ".aqua-screen" in css
     assert ".aqua-leaflet-marker" in css
     assert ".aqua-dashboard-surface" in css
+    assert ".aqua-dashboard-container" in css
+    assert ".aqua-wave-band" in css
+    assert ".aqua-home-stats" in css
     assert ".aqua-hero-editorial" in css
     assert ".aqua-number-wall" in css
     assert ".aqua-metric" in css
+    assert "repeat-x" in css
     assert "10_wave_divider_blue" in css
     assert "11_wave_divider_teal" in css
 
