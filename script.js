@@ -40,6 +40,7 @@ const WATER_TARIFF_PER_M3 = 71.03;
 const WATER_TARIFF_LABEL = 'Tarifa estimada para cálculo do MVP';
 // Valor de tarifa usado apenas para estimativa de MVP.
 // Em produção, deve ser carregado de configuração e validado com a tarifa vigente/contrato aplicável.
+const BRAND_SYMBOL_IMG = '<img src="/assets/brand/aquaia_simbolo_gota_pin.svg" alt="" />';
 const LEAK_IMPACT_PARAMS = {
   torneira: { litersPerDay: 300, source: 'PURA-UFMS / referência técnica histórica', confidence: 'Alta' },
   vaso_sanitario: { litersPerDay: 700, source: 'PURA-UFMS / DECA', confidence: 'Alta' },
@@ -480,7 +481,7 @@ function renderRecentOccurrences() {
   if (!latest.length) {
     recentOccurrences.innerHTML = `
       <div class="home-empty-state">
-        <div class="empty-icon">${ICONS.drop}</div>
+        <div class="empty-icon brand-empty-icon">${BRAND_SYMBOL_IMG}</div>
         <p>Nenhuma ocorrência registrada ainda. Comece registrando o primeiro ponto de atenção hídrica.</p>
         <button class="primary-action compact-action" type="button" data-tab-target="registro">Registrar ocorrência</button>
       </div>
@@ -515,7 +516,7 @@ function renderCampusPreview() {
   if (!points.length) {
     campusPreview.innerHTML = `
       <div class="preview-map-empty">
-        <span>${ICONS.map}</span>
+        <span class="brand-empty-icon">${BRAND_SYMBOL_IMG}</span>
         <p>Sem pontos críticos cadastrados.</p>
       </div>
     `;
@@ -902,7 +903,7 @@ function renderCampusMarkers() {
 
   const data = buildMapData();
   campusMarkers.innerHTML = data.map(point => {
-    const tone = point.urgent > 0 ? 'red' : point.count > 1 ? 'orange' : 'blue';
+    const tone = !point.count ? 'institutional' : point.urgent > 0 ? 'red' : point.count > 1 ? 'orange' : 'blue';
     const label = point.count || '•';
     return `
       <button class="campus-marker ${tone}" style="left:${point.x}%; top:${point.y}%;" type="button" title="${escapeHtml(point.label)}">
@@ -921,7 +922,7 @@ function renderOsmMarkers() {
   const bounds = [];
 
   data.forEach(point => {
-    const tone = point.urgent > 0 ? 'red' : point.count > 1 ? 'orange' : 'blue';
+    const tone = !point.count ? 'institutional' : point.urgent > 0 ? 'red' : point.count > 1 ? 'orange' : 'blue';
     const label = point.count || '•';
     const icon = L.divIcon({
       className: 'aquaia-marker-icon',

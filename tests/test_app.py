@@ -3,6 +3,9 @@ def test_static_routes_and_public_config(client):
     assert client.get("/style.css").status_code == 200
     assert client.get("/script.js").status_code == 200
     assert client.get("/assets/mapa-ufms-campo-grande-2026.png").status_code == 200
+    assert client.get("/assets/brand/aquaia_logo_horizontal_sem_tagline.svg").status_code == 200
+    assert client.get("/assets/brand/aquaia_favicon_app_icon.svg").status_code == 200
+    assert client.get("/assets/brand/aquaia_favicon_app_icon_256.png").status_code == 200
     assert client.get("/aquaia.db").status_code == 404
 
     health = client.get("/api/health")

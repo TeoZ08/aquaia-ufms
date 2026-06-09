@@ -15,11 +15,16 @@ def test_home_contains_pitch_and_financial_sections():
     html = (ROOT / "index.html").read_text(encoding="utf-8")
 
     required_text = [
-        "O PURA-UFMS mediu o problema",
-        "Por que isso importa na UFMS?",
+        "/assets/brand/aquaia_logo_horizontal_sem_tagline.svg",
+        "/assets/brand/aquaia_simbolo_gota_pin.svg",
+        "/assets/brand/aquaia_favicon_app_icon.svg",
         "Impacto financeiro real",
-        "R$ 8.369.678,68",
-        "R$ 6.998.292,65",
+        "R$ 8,36 mi",
+        "R$ 7,92 mi",
+        "R$ 6,99 mi",
+        "R$ 6,80 mi",
+        "Base técnica e evidências",
+        "PURA-UFMS",
         "Como calculamos",
         "Começa na UFMS, escala para a cidade",
         "ODS conectados",
@@ -27,6 +32,13 @@ def test_home_contains_pitch_and_financial_sections():
 
     for text in required_text:
         assert text in html
+
+
+def test_pura_ufms_is_not_in_home_before_about_section():
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    home_before_about = html.split('<section id="sobre"', 1)[0]
+
+    assert "PURA-UFMS" not in home_before_about
 
 
 def test_frontend_has_financial_impact_constants():

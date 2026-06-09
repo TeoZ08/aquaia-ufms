@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 320" role="img" aria-labelledby="title desc">
+  <title id="title">AquaIA símbolo gota pin</title>
+  <desc id="desc">Símbolo vetorial AquaIA: gota, pin de localização, onda e brilho de IA.</desc>
+
+
+  <defs>
+    <clipPath id="aquaia_inner_clip">
+      <path d="M128 62 C156 89 172 116 164 145 C158 169 143 189 128 220 C113 189 98 169 92 145 C84 116 100 89 128 62 Z" />
+    </clipPath>
+    <clipPath id="aquaia_outer_clip">
+      <path d="M128 14 C174 56 202 101 190 149 C180 190 154 224 128 292 C102 224 76 190 66 149 C54 101 82 56 128 14 Z" />
+    </clipPath>
+  </defs>
+    <g id="aquaia-symbol">
+      <path d="M128 14 C174 56 202 101 190 149 C180 190 154 224 128 292 C102 224 76 190 66 149 C54 101 82 56 128 14 Z M128 62 C156 89 172 116 164 145 C158 169 143 189 128 220 C113 189 98 169 92 145 C84 116 100 89 128 62 Z" fill="#238689" fill-rule="evenodd"/>
+      <path d="M66 178 C91 136 119 133 145 154 C166 171 182 156 194 130" fill="none" stroke="#238689" stroke-width="22" stroke-linecap="round" clip-path="url(#aquaia_inner_clip)"/>
+      <path d="M128 104 L138 124 L158 134 L138 144 L128 164 L118 144 L98 134 L118 124 Z" fill="#25C5E9" transform="translate(0,-2) scale(.72) translate(50,38)"/>
+    </g>
+</svg>

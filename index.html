@@ -4,7 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AquaIA UFMS</title>
-  <meta name="theme-color" content="#0B8EF3" />
+  <meta name="theme-color" content="#238689" />
+  <link rel="icon" href="/assets/brand/aquaia_favicon_app_icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/brand/aquaia_favicon_app_icon_256.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -13,14 +18,7 @@
     <section class="phone-frame">
       <header class="desktop-topbar" aria-label="Navegação principal">
         <button class="brand-mini tab active" type="button" data-tab="dashboard">
-          <span class="brand-symbol" aria-hidden="true">
-            <svg viewBox="0 0 48 48">
-              <path d="M24 4c-7 9-13 17-13 26a13 13 0 0 0 26 0C37 21 31 13 24 4Z" fill="currentColor"/>
-              <path d="M16 31c5 4 12 5 18 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-              <path d="M19 37c3 2 7 2 10 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>
-            </svg>
-          </span>
-          <span>AquaIA UFMS</span>
+          <img class="brand-logo" src="/assets/brand/aquaia_logo_horizontal_sem_tagline.svg" alt="AquaIA UFMS" />
         </button>
         <nav class="top-nav" aria-label="Seções do produto">
           <button class="tab active" type="button" data-tab="dashboard">Início</button>
@@ -40,18 +38,14 @@
               </div>
               <div class="brand-lockup hero-brand">
                 <div class="logo-mark" aria-hidden="true">
-                  <svg viewBox="0 0 96 96" role="img">
-                    <path d="M48 7C34 25 21 42 21 59c0 17 12 30 27 30s27-13 27-30C75 42 62 25 48 7Z" fill="#138FF2"/>
-                    <path d="M29 64c9 6 24 8 39 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M36 73c8 3 17 3 25 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".82"/>
-                  </svg>
+                  <img src="/assets/brand/aquaia_simbolo_gota_pin.svg" alt="" />
                 </div>
                 <div>
                   <h1>Aqua<span>IA</span> UFMS</h1>
-                  <strong>Inteligência hídrica participativa para monitoramento contínuo</strong>
+                  <strong>Inteligência hídrica para um campus sustentável</strong>
                 </div>
               </div>
-              <p>O PURA-UFMS mediu o problema. O AquaIA torna esse monitoramento contínuo, participativo e inteligente, com registros da comunidade, IA e cálculo auditável de impacto.</p>
+              <p>Registre vazamentos, acompanhe pontos críticos e use IA para priorizar ações de manutenção no campus com impacto hídrico e financeiro estimado.</p>
               <div class="hero-actions">
                 <button class="primary-action compact-action" type="button" data-tab-target="registro">Registrar ocorrência</button>
                 <button class="ghost-action compact-action" type="button" data-tab-target="mapa">Ver mapa do campus</button>
@@ -63,41 +57,17 @@
             </div>
 
             <div class="hero-visual" aria-hidden="true">
-              <svg viewBox="0 0 520 360" role="img">
-                <defs>
-                  <linearGradient id="heroWater" x1="0" x2="1" y1="0" y2="1">
-                    <stop stop-color="#55C7FF"/>
-                    <stop offset="1" stop-color="#0B8EF3"/>
-                  </linearGradient>
-                  <linearGradient id="heroGlass" x1="0" x2="1">
-                    <stop stop-color="#F8FCFF"/>
-                    <stop offset="1" stop-color="#DFF3FF"/>
-                  </linearGradient>
-                </defs>
-                <path d="M35 275c72-36 118 28 192-6 74-34 113-90 250-45" fill="none" stroke="#BFEAFF" stroke-width="22" stroke-linecap="round"/>
-                <path d="M28 309c76-39 132 24 205-9 72-33 127-73 252-37" fill="none" stroke="#E5F6FF" stroke-width="16" stroke-linecap="round"/>
-                <rect x="84" y="122" width="112" height="116" rx="14" fill="url(#heroGlass)" stroke="#94D7FF" stroke-width="4"/>
-                <rect x="220" y="86" width="150" height="152" rx="16" fill="#FFFFFF" stroke="#94D7FF" stroke-width="4"/>
-                <rect x="388" y="150" width="58" height="88" rx="12" fill="#DFF3FF" stroke="#94D7FF" stroke-width="4"/>
-                <g fill="#9ADFFF">
-                  <rect x="106" y="146" width="18" height="28" rx="5"/>
-                  <rect x="138" y="146" width="18" height="28" rx="5"/>
-                  <rect x="170" y="146" width="18" height="28" rx="5"/>
-                  <rect x="246" y="112" width="22" height="34" rx="6"/>
-                  <rect x="286" y="112" width="22" height="34" rx="6"/>
-                  <rect x="326" y="112" width="22" height="34" rx="6"/>
-                  <rect x="246" y="165" width="22" height="34" rx="6"/>
-                  <rect x="286" y="165" width="22" height="34" rx="6"/>
-                  <rect x="326" y="165" width="22" height="34" rx="6"/>
-                </g>
-                <path d="M402 46c-24 32-39 53-39 76a39 39 0 0 0 78 0c0-23-15-44-39-76Z" fill="url(#heroWater)"/>
-                <path d="M382 126c13 9 31 9 44 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".9"/>
-                <path d="M75 248c-21-4-34-16-34-34 0-17 12-30 29-32 8-17 24-27 43-27 24 0 43 17 47 40 19 5 31 19 31 37 0 25-20 39-51 39H75Z" fill="#E6F9F1"/>
-                <path d="M69 247c16-18 31-31 51-48 17 16 32 30 48 49" fill="none" stroke="#19B879" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="453" cy="252" r="18" fill="#19B879" opacity=".18"/>
-                <circle cx="64" cy="112" r="14" fill="#0B8EF3" opacity=".13"/>
-                <circle cx="468" cy="93" r="9" fill="#19B879" opacity=".2"/>
-              </svg>
+              <div class="hero-symbol-wrap">
+                <img src="/assets/brand/aquaia_simbolo_gota_pin.svg" alt="" />
+                <div class="hero-signal-card top">
+                  <strong>IA + triagem</strong>
+                  <span>Prioridade e ação sugerida</span>
+                </div>
+                <div class="hero-signal-card bottom">
+                  <strong>Mapa vivo</strong>
+                  <span>Pontos críticos por local</span>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -110,43 +80,36 @@
             <button class="filter-button full-width" type="button" data-tab-target="mapa">Abrir mapa completo</button>
           </section>
 
-          <section class="content-block evidence-block">
-            <div class="section-head">
-              <div>
-                <h3>Por que isso importa na UFMS?</h3>
-                <p>Dados históricos e financeiros ajudam a dimensionar o monitoramento.</p>
-              </div>
-            </div>
-            <div class="evidence-grid">
-              <article class="evidence-card"><strong>2.773</strong><span>Pontos de consumo mapeados historicamente</span></article>
-              <article class="evidence-card"><strong>300 L/dia</strong><span>Possível vazamento em torneira</span></article>
-              <article class="evidence-card"><strong>700 L/dia</strong><span>Possível vazamento em vaso sanitário</span></article>
-              <article class="evidence-card"><strong>R$ 8,3 mi</strong><span>Contratos contínuos de água e esgoto UFMS em 2025</span></article>
-              <article class="evidence-card"><strong>R$ 7 mi</strong><span>Comprometidos em Campo Grande com Águas Guariroba</span></article>
-              <article class="evidence-card"><strong>Contínuo</strong><span>Monitoramento participativo com decisão humana</span></article>
-            </div>
-            <p class="source-note">Referências: dados técnicos históricos do PURA-UFMS (2009-2010) e contratos contínuos de 2025. São base técnica e financeira para o MVP, não diagnóstico atual de desperdício.</p>
-          </section>
-
           <section class="content-block finance-block">
             <div class="section-head">
               <div>
                 <h3>Impacto financeiro real</h3>
-                <p>O app não promete economia total: ele prioriza vazamentos em um contrato de alta escala.</p>
+                <p>Contratos de água e esgoto em escala suficiente para justificar monitoramento contínuo.</p>
               </div>
             </div>
             <div class="contract-grid">
               <article class="contract-card">
-                <span>UFMS 2025</span>
-                <strong>R$ 8.369.678,68</strong>
-                <p>Água e esgoto em contratos contínuos.</p>
+                <span>Empenhado UFMS</span>
+                <strong>R$ 8,36 mi</strong>
+                <p>Contratos contínuos de água e esgoto da UFMS em 2025.</p>
               </article>
               <article class="contract-card">
-                <span>Campo Grande</span>
-                <strong>R$ 6.998.292,65</strong>
-                <p>Comprometidos com Águas Guariroba.</p>
+                <span>Liquidado UFMS</span>
+                <strong>R$ 7,92 mi</strong>
+                <p>Total liquidado no exercício.</p>
+              </article>
+              <article class="contract-card">
+                <span>Empenhado CG</span>
+                <strong>R$ 6,99 mi</strong>
+                <p>Empenhados em Campo Grande com Águas Guariroba.</p>
+              </article>
+              <article class="contract-card">
+                <span>Liquidado CG</span>
+                <strong>R$ 6,80 mi</strong>
+                <p>Liquidados em Campo Grande com Águas Guariroba.</p>
               </article>
             </div>
+            <p class="source-note">Fonte: Contratos Contínuos UFMS - Água e Esgoto, exercício 2025, atualização 26/05/2026.</p>
           </section>
 
           <section class="content-block metrics-block">
@@ -368,9 +331,7 @@
 
         <article class="about-card">
           <div class="about-logo">
-            <div class="logo-mark small" aria-hidden="true">
-              <svg viewBox="0 0 96 96"><path d="M48 7C34 25 21 42 21 59c0 17 12 30 27 30s27-13 27-30C75 42 62 25 48 7Z" fill="#138FF2"/><path d="M29 64c9 6 24 8 39 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
-            </div>
+            <img class="about-brand-logo" src="/assets/brand/aquaia_logo_horizontal_com_tagline.svg" alt="AquaIA UFMS - Inteligência hídrica participativa" />
             <div>
               <strong>AquaIA UFMS</strong>
               <span>MVP para o Hackathon</span>
@@ -385,10 +346,23 @@
         </article>
 
         <article class="about-card narrative-card">
+          <h3>Base técnica e evidências</h3>
+          <p>O AquaIA utiliza dados históricos e parâmetros técnicos para estimar impacto hídrico. Entre as referências utilizadas está o estudo do PURA-UFMS, que mapeou pontos de consumo e vulnerabilidades no campus de Campo Grande. Esses dados são tratados como evidência histórica e ponto de partida para o MVP, não como diagnóstico atual automático.</p>
+          <div class="evidence-grid technical-evidence-grid">
+            <article class="evidence-card"><strong>2.773</strong><span>Pontos de consumo mapeados.</span></article>
+            <article class="evidence-card"><strong>300 L/dia</strong><span>Até esse volume em torneiras com vazamento.</span></article>
+            <article class="evidence-card"><strong>700 L/dia</strong><span>Até esse volume em bacias sanitárias com vazamento.</span></article>
+            <article class="evidence-card"><strong>16%</strong><span>Torneiras hidromecânicas ou economizadoras.</span></article>
+            <article class="evidence-card"><strong>8%</strong><span>Bacias com caixa de descarga.</span></article>
+            <article class="evidence-card"><strong>Central e VI</strong><span>Reservatórios com vazamentos identificados historicamente.</span></article>
+          </div>
+        </article>
+
+        <article class="about-card narrative-card">
           <h3>Do diagnóstico ao monitoramento contínuo</h3>
-          <p>O PURA-UFMS mostrou que o consumo de água no campus pode ser analisado tecnicamente. O AquaIA leva essa lógica para uma rotina viva: qualquer pessoa registra uma evidência, o sistema estima impacto e a manutenção decide a ação.</p>
+          <p>A base técnica mostra que consumo de água pode ser acompanhado com método. O AquaIA leva essa lógica para uma rotina viva: qualquer pessoa registra uma evidência, o sistema estima impacto e a manutenção decide a ação.</p>
           <div class="about-grid two-columns">
-            <div><strong>Histórico</strong><span>2.773 pontos, tipos de peças hidráulicas e vazamentos de referência.</span></div>
+            <div><strong>Referência</strong><span>Parâmetros históricos e estimativas conservadoras para triagem.</span></div>
             <div><strong>Operação</strong><span>Registros, status, mapa, prioridade e cálculo financeiro no painel.</span></div>
           </div>
         </article>
