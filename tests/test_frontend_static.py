@@ -28,7 +28,6 @@ def test_templates_contain_product_sections_and_brand_assets():
         "assets/brand/07_map_marker_typographic_a.png",
         "assets/brand/08_hero_title_inteligencia_hidrica.png",
         "assets/brand/09_hero_phrase_desperdicio_vira_dado.png",
-        "assets/brand/10_wave_divider_blue.png",
         "dist/output.css",
         "dist/app.js",
         "Impacto financeiro real",
@@ -95,9 +94,12 @@ def test_tailwind_output_contains_project_components():
     assert ".aqua-panel" in css
     assert ".aqua-screen" in css
     assert ".aqua-leaflet-marker" in css
+    assert ".aqua-dashboard-surface" in css
     assert ".aqua-hero-editorial" in css
     assert ".aqua-number-wall" in css
     assert ".aqua-metric" in css
+    assert "10_wave_divider_blue" in css
+    assert "11_wave_divider_teal" in css
 
 
 def test_render_blueprint_matches_runtime_contract():

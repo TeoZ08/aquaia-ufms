@@ -188,6 +188,40 @@
     color: #587174;
   }
 
+  .aqua-dashboard-surface {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .aqua-dashboard-surface::before {
+    content: "";
+    position: absolute;
+    inset: -1.5rem 0 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      url("/static/assets/brand/11_wave_divider_teal.png"),
+      url("/static/assets/brand/11_wave_divider_teal.png");
+    background-position:
+      calc(50% + 18rem) 3.2rem,
+      calc(50% - 24rem) 93rem;
+    background-repeat: no-repeat;
+    background-size:
+      min(46rem, 58vw) auto,
+      min(54rem, 70vw) auto;
+    opacity: 0.22;
+  }
+
+  .aqua-dashboard-surface::after {
+    content: "";
+    position: absolute;
+    inset: -1.5rem 0 0;
+    z-index: -1;
+    pointer-events: none;
+    background: url("/static/assets/brand/10_wave_divider_blue.png") center 46rem / 100vw auto no-repeat;
+    opacity: 0.22;
+  }
+
   .aqua-hero-editorial {
     position: relative;
     display: grid;
@@ -197,17 +231,6 @@
     overflow: hidden;
     border-bottom: 1px solid rgb(35 134 137 / 0.18);
     padding-block: clamp(2rem, 6vw, 5.5rem);
-  }
-
-  .aqua-hero-editorial::before {
-    content: "";
-    position: absolute;
-    inset: 1rem 0 auto auto;
-    width: min(47rem, 72vw);
-    height: 8rem;
-    background: url("/static/assets/brand/11_wave_divider_teal.png") center / contain no-repeat;
-    opacity: 0.32;
-    pointer-events: none;
   }
 
   .aqua-hero-copy,
@@ -251,14 +274,6 @@
   .aqua-proof-lines strong {
     font-size: clamp(1.05rem, 2vw, 1.55rem);
     line-height: 1.1;
-  }
-
-  .aqua-wave-divider {
-    width: 100%;
-    max-height: 6.5rem;
-    object-fit: cover;
-    object-position: center;
-    opacity: 0.9;
   }
 
   .aqua-live-strip,
@@ -529,13 +544,30 @@
     min-height: auto;
   }
 
+  .aqua-dashboard-surface::before {
+    inset: 0;
+    background-position:
+      center 5.8rem,
+      center 92rem;
+    background-size:
+      92vw auto,
+      118vw auto;
+    opacity: 0.22;
+  }
+
+  .aqua-dashboard-surface::after {
+    inset: 0;
+    background-position: center 42rem;
+    background-size: 100vw auto;
+    opacity: 0.2;
+  }
+
   .aqua-hero-proof {
     display: none;
   }
 
-  .aqua-wave-divider {
-    max-height: 4.5rem;
-    margin-bottom: 6rem;
+  .aqua-live-strip {
+    margin-top: 9rem;
   }
 
   .aqua-number-wall strong {
