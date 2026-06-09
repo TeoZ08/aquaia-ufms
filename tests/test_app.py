@@ -11,8 +11,10 @@ def test_static_routes_and_public_config(client):
     assert client.get("/style.css").status_code == 200
     assert client.get("/script.js").status_code == 200
     assert client.get("/static/assets/maps/mapa-ufms-campo-grande-2026.png").status_code == 200
-    assert client.get("/static/assets/brand/03_logo_wordmark_clean_navbar.png").status_code == 200
+    assert client.get("/static/assets/brand/02_logo_wordmark_waves_teal_ia.png").status_code == 200
     assert client.get("/static/assets/brand/07_map_marker_typographic_a.png").status_code == 200
+    assert client.get("/static/assets/brand/wave-loop-blue.png").status_code == 200
+    assert client.get("/static/assets/brand/wave-loop-teal.png").status_code == 200
     assert client.get("/static/assets/logo/aquaia_logo_horizontal_sem_tagline.svg").status_code == 200
     assert client.get("/assets/mapa-ufms-campo-grande-2026.png").status_code == 200
     assert client.get("/assets/brand/aquaia_logo_horizontal_sem_tagline.svg").status_code == 200

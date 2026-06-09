@@ -145,10 +145,10 @@ export default class extends Controller {
     return `
       <div class="min-w-52 font-sans">
         <strong class="block text-sm">${escapeHtml(point.label)}</strong>
-        <p class="mt-1 text-xs text-slate-600">${point.count} ocorrência(s) mapeada(s)</p>
-        <p class="text-xs text-slate-600">${formatNumber(point.liters)} L/dia · ${formatCurrency(impact.costPerMonth)}/mês</p>
-        <p class="text-xs text-slate-600">Mais crítica: ${critical ? `${escapeHtml(critical.prioridade)} · ${escapeHtml(shortText(critical.tipo_ocorrencia, 44))}` : "Sem ocorrências"}</p>
-        <p class="text-xs text-slate-600">Status predominante: ${escapeHtml(dominantStatus)}</p>
+        <p class="mt-1 text-xs text-aqua-ink/65">${point.count} ocorrência(s) mapeada(s)</p>
+        <p class="text-xs text-aqua-ink/65">${formatNumber(point.liters)} L/dia · ${formatCurrency(impact.costPerMonth)}/mês</p>
+        <p class="text-xs text-aqua-ink/65">Mais crítica: ${critical ? `${escapeHtml(critical.prioridade)} · ${escapeHtml(shortText(critical.tipo_ocorrencia, 44))}` : "Sem ocorrências"}</p>
+        <p class="text-xs text-aqua-ink/65">Status predominante: ${escapeHtml(dominantStatus)}</p>
         <div class="mt-2 grid gap-1 text-xs">${itemsHtml}</div>
       </div>
     `
@@ -162,9 +162,9 @@ export default class extends Controller {
   }
 
   colorForTone(tone) {
-    if (tone === "red") return "#ef5b51"
-    if (tone === "orange") return "#ff9c3d"
+    if (tone === "red") return "#E5483F"
+    if (tone === "orange") return "#F59E0B"
     if (tone === "institutional") return "#238689"
-    return "#25c5e9"
+    return "#25C5E9"
   }
 }

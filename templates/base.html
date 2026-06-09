@@ -24,18 +24,18 @@
   data-map-tariff-value="{{ tariff_per_m3 }}"
   data-action="aquaia:screen-changed@window->dashboard#handleScreenChange aquaia:screen-changed@window->map#handleScreenChange aquaia:occurrence-created@window->dashboard#reload aquaia:occurrences-updated@window->map#updateFromEvent keydown@window->nav#closeOnEscape"
 >
-  <header class="sticky top-0 z-40 border-b border-aqua-cyan/10 bg-aqua-mist/88 backdrop-blur-xl">
+  <header class="sticky top-0 z-40 border-b border-aqua-line bg-aqua-bg/92 backdrop-blur-xl">
     <div class="aqua-container flex min-h-20 items-center justify-between gap-4">
       <button class="shrink-0" type="button" data-action="nav#show" data-screen="dashboard" aria-label="Ir para o início">
-        <img class="h-9 w-auto" src="{{ url_for('static', filename='assets/brand/03_logo_wordmark_clean_navbar.png') }}" alt="aquaIA UFMS" />
+        <img class="h-10 w-auto" src="{{ url_for('static', filename='assets/brand/02_logo_wordmark_waves_teal_ia.png') }}" alt="aquaIA UFMS" />
       </button>
 
-      <nav class="hidden items-center gap-2 rounded-full border border-aqua-cyan/15 bg-white/75 p-1 shadow-aqua lg:flex" aria-label="Navegação principal">
-        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard">Início</button>
-        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro">Registrar</button>
-        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel">Painel</button>
-        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa">Mapa</button>
-        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia">Metodologia</button>
+      <nav class="hidden items-center gap-2 rounded-full border border-aqua-line bg-aqua-surface/80 p-1 shadow-aqua lg:flex" aria-label="Navegação principal">
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-aqua-ink/70 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard">Início</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-aqua-ink/70 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro">Registrar</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-aqua-ink/70 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel">Painel</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-aqua-ink/70 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa">Mapa</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-aqua-ink/70 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia">Metodologia</button>
       </nav>
 
       <button
@@ -51,12 +51,12 @@
     </div>
 
     <div class="aqua-container hidden pb-4 lg:hidden" data-nav-target="mobileMenu">
-      <nav class="grid gap-2 rounded-3xl border border-aqua-cyan/15 bg-white/90 p-3 shadow-aqua" aria-label="Menu mobile">
-        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard">Início</button>
-        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro">Registrar ocorrência</button>
-        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel">Painel</button>
-        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa">Mapa</button>
-        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia">Metodologia</button>
+      <nav class="grid gap-2 rounded-3xl border border-aqua-line bg-aqua-surface/92 p-3 shadow-aqua" aria-label="Menu mobile">
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-aqua-ink/70" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard">Início</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-aqua-ink/70" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro">Registrar ocorrência</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-aqua-ink/70" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel">Painel</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-aqua-ink/70" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa">Mapa</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-aqua-ink/70" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia">Metodologia</button>
       </nav>
     </div>
   </header>
@@ -65,12 +65,12 @@
     {% block content %}{% endblock %}
   </main>
 
-  <nav class="fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border border-aqua-cyan/15 bg-white/95 p-2 shadow-aqua backdrop-blur-xl lg:hidden" aria-label="Navegação inferior">
-    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">⌂</span>Início</button>
-    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">◇</span>Painel</button>
-    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro"><span class="grid h-10 w-10 place-items-center rounded-full bg-aqua-cyan text-white">＋</span>Novo</button>
-    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">⌖</span>Mapa</button>
-    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">i</span>Base</button>
+  <nav class="fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border border-aqua-line bg-aqua-surface/95 p-2 shadow-aqua backdrop-blur-xl lg:hidden" aria-label="Navegação inferior">
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-aqua-ink/60" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">⌂</span>Início</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-aqua-ink/60" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">◇</span>Painel</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-aqua-ink/60" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro"><span class="grid h-10 w-10 place-items-center rounded-full bg-aqua-cyan text-white">＋</span>Novo</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-aqua-ink/60" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">⌖</span>Mapa</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-aqua-ink/60" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">i</span>Base</button>
   </nav>
 
   <div class="fixed bottom-24 left-1/2 z-[60] hidden w-[min(92vw,430px)] -translate-x-1/2 rounded-full bg-aqua-ink px-5 py-3 text-center text-sm font-extrabold text-white shadow-aqua" role="status" aria-live="polite" data-controller="toast" data-action="aquaia:toast@window->toast#show">

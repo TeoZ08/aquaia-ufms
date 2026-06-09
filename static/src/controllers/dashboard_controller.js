@@ -238,7 +238,7 @@ export default class extends Controller {
           <div class="max-w-2xl">
             <h3 class="text-base font-extrabold">${escapeHtml(item.local)}</h3>
             <p class="mt-1 text-sm aqua-muted">${escapeHtml(item.tipo_ocorrencia)}</p>
-            <p class="mt-2 text-sm text-slate-600">${escapeHtml(shortText(item.descricao, 130))}</p>
+            <p class="mt-2 text-sm text-aqua-ink/65">${escapeHtml(shortText(item.descricao, 130))}</p>
           </div>
           <span class="${badgeClass(item.status)}">${escapeHtml(item.status)}</span>
         </div>

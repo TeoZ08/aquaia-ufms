@@ -4,13 +4,14 @@
 @source "./**/*.js";
 
 @theme {
-  --color-aqua-mint: #f2fff6;
-  --color-aqua-mist: #eefcf5;
-  --color-aqua-tea: #caffde;
-  --color-aqua-sky: #25c5e9;
+  --color-aqua-bg: #FFFDF2;
+  --color-aqua-surface: #FFFFFF;
+  --color-aqua-mint: #E9FFF2;
+  --color-aqua-sky: #25C5E9;
   --color-aqua-cyan: #238689;
+  --color-aqua-blue: #2437FF;
   --color-aqua-ink: #021225;
-  --color-aqua-line: #d9ece5;
+  --color-aqua-line: #D9ECE5;
   --font-sans: "Sora", "Plus Jakarta Sans", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --shadow-aqua: 0 18px 45px rgb(2 18 37 / 0.07);
 }
@@ -23,8 +24,7 @@
   body {
     min-height: 100vh;
     overflow-x: hidden;
-    background:
-      linear-gradient(180deg, #f8fff9 0%, #eefcf5 48%, #f7fffb 100%);
+    background: #FFFDF2;
     color: #021225;
     font-family: var(--font-sans);
   }
@@ -51,7 +51,7 @@
   }
 
   ::selection {
-    background: #caffde;
+    background: #E9FFF2;
     color: #021225;
   }
 }
@@ -67,7 +67,7 @@
   }
 
   .aqua-card {
-    border: 1px solid rgb(35 134 137 / 0.14);
+    border: 1px solid rgb(217 236 229 / 0.82);
     border-radius: 1.5rem;
     background: rgb(255 255 255 / 0.82);
     box-shadow: var(--shadow-aqua);
@@ -75,7 +75,7 @@
   }
 
   .aqua-panel {
-    border: 1px solid rgb(35 134 137 / 0.12);
+    border: 1px solid rgb(217 236 229 / 0.82);
     border-radius: 1.125rem;
     background: rgb(255 255 255 / 0.84);
   }
@@ -101,7 +101,7 @@
   }
 
   .aqua-btn-primary:hover {
-    background: #1d7477;
+    background: #238689;
     transform: translateY(-1px);
   }
 
@@ -124,7 +124,7 @@
   .aqua-input {
     width: 100%;
     border-radius: 1rem;
-    border: 1px solid rgb(35 134 137 / 0.18);
+    border: 1px solid rgb(217 236 229 / 0.95);
     background: rgb(255 255 255 / 0.9);
     padding: 0.875rem 1rem;
     color: #021225;
@@ -133,18 +133,18 @@
   }
 
   .aqua-input::placeholder {
-    color: #7b9093;
+    color: rgb(2 18 37 / 0.42);
   }
 
   .aqua-input:focus {
-    border-color: #25c5e9;
+    border-color: #25C5E9;
     box-shadow: 0 0 0 4px rgb(37 197 233 / 0.16);
   }
 
   .aqua-label {
     display: grid;
     gap: 0.45rem;
-    color: #15383b;
+    color: rgb(2 18 37 / 0.82);
     font-size: 0.82rem;
     font-weight: 800;
   }
@@ -163,22 +163,22 @@
 
   .aqua-badge-blue {
     background: rgb(37 197 233 / 0.14);
-    color: #146d7a;
+    color: #238689;
   }
 
   .aqua-badge-green {
-    background: rgb(202 255 222 / 0.62);
-    color: #176b48;
+    background: #E9FFF2;
+    color: #238689;
   }
 
   .aqua-badge-orange {
-    background: #fff0df;
-    color: #a45d12;
+    background: rgb(245 158 11 / 0.14);
+    color: #F59E0B;
   }
 
   .aqua-badge-red {
-    background: #ffe9e7;
-    color: #bd3329;
+    background: rgb(229 72 63 / 0.12);
+    color: #E5483F;
   }
 
   .aqua-section-title {
@@ -189,7 +189,7 @@
   }
 
   .aqua-muted {
-    color: #587174;
+    color: rgb(2 18 37 / 0.62);
   }
 
   .aqua-dashboard-surface {
@@ -208,7 +208,10 @@
     height: clamp(7rem, 10vw, 11rem);
     transform: translateX(-50%);
     pointer-events: none;
-    background: url("/static/assets/brand/11_wave_divider_teal.png") center / auto 100% repeat-x;
+    background-image: url("/static/assets/brand/wave-loop-teal.png");
+    background-position: left center;
+    background-repeat: repeat-x;
+    background-size: 1440px auto;
     opacity: 0.18;
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
     mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
@@ -224,7 +227,10 @@
     height: clamp(12rem, 18vw, 18rem);
     transform: translateX(-50%);
     pointer-events: none;
-    background: url("/static/assets/brand/10_wave_divider_blue.png") center / auto 100% repeat-x;
+    background-image: url("/static/assets/brand/wave-loop-blue.png");
+    background-position: left center;
+    background-repeat: repeat-x;
+    background-size: 1440px auto;
     opacity: 0.13;
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 76%, transparent 100%);
     mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 76%, transparent 100%);
@@ -236,7 +242,7 @@
     min-height: min(44rem, calc(100vh - 5rem));
     align-items: center;
     gap: clamp(2rem, 6vw, 7rem);
-    border-bottom: 1px solid rgb(35 134 137 / 0.18);
+    border-bottom: 1px solid rgb(217 236 229 / 0.96);
     padding-block: clamp(2rem, 6vw, 6.5rem);
   }
 
@@ -264,7 +270,7 @@
     gap: 1.6rem;
     justify-self: end;
     width: min(100%, 38rem);
-    border-left: 1px solid rgb(35 134 137 / 0.18);
+    border-left: 1px solid rgb(217 236 229 / 0.96);
     padding-left: clamp(1.25rem, 3vw, 2.5rem);
   }
 
@@ -282,7 +288,7 @@
     grid-template-columns: 2.4rem 1fr;
     align-items: center;
     gap: 0.75rem;
-    border-top: 1px solid rgb(35 134 137 / 0.16);
+    border-top: 1px solid rgb(217 236 229 / 0.96);
     padding-top: 0.75rem;
   }
 
@@ -300,7 +306,7 @@
   .aqua-live-strip,
   .aqua-product-band,
   .aqua-impact-band {
-    border-block: 1px solid rgb(35 134 137 / 0.14);
+    border-block: 1px solid rgb(217 236 229 / 0.96);
     padding-block: clamp(1.25rem, 3vw, 2rem);
   }
 
@@ -310,7 +316,7 @@
     padding-inline: max(1rem, calc((100vw - 1500px) / 2 + 3.5rem));
     display: grid;
     gap: 1.2rem;
-    background: linear-gradient(90deg, rgb(248 255 249 / 0.62), rgb(242 255 246 / 0.42), rgb(248 255 249 / 0.62));
+    background: rgb(255 255 255 / 0.24);
   }
 
   .aqua-wave-band {
@@ -324,17 +330,17 @@
   }
 
   .aqua-metric {
-    border-left: 3px solid #25c5e9;
+    border-left: 3px solid #25C5E9;
     min-height: 7rem;
     padding: 0.95rem 1rem;
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.34), rgb(255 255 255 / 0));
+    background: rgb(255 255 255 / 0.34);
   }
 
   .aqua-metric span,
   .aqua-impact-cell span,
   .aqua-number-wall span {
     display: block;
-    color: #587174;
+    color: rgb(2 18 37 / 0.62);
     font-size: 0.68rem;
     font-weight: 850;
     text-transform: uppercase;
@@ -352,7 +358,7 @@
   .aqua-metric p,
   .aqua-impact-cell p {
     margin-top: 0.35rem;
-    color: #587174;
+    color: rgb(2 18 37 / 0.62);
     font-size: 0.78rem;
     line-height: 1.35;
   }
@@ -376,7 +382,10 @@
     height: clamp(6.5rem, 9vw, 9rem);
     transform: translateX(-50%);
     pointer-events: none;
-    background: url("/static/assets/brand/11_wave_divider_teal.png") center / auto 100% repeat-x;
+    background-image: url("/static/assets/brand/wave-loop-teal.png");
+    background-position: left center;
+    background-repeat: repeat-x;
+    background-size: 1440px auto;
     opacity: 0.1;
     -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
     mask-image: linear-gradient(180deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
@@ -388,14 +397,14 @@
   }
 
   .aqua-number-wall div {
-    border-top: 1px solid rgb(35 134 137 / 0.18);
+    border-top: 1px solid rgb(217 236 229 / 0.96);
     padding-top: 1rem;
   }
 
   .aqua-number-wall strong {
     display: block;
     margin-top: 0.35rem;
-    color: #1028ff;
+    color: #2437FF;
     font-size: clamp(2.3rem, 5.8vw, 5.4rem);
     font-weight: 950;
     letter-spacing: 0;
@@ -409,11 +418,11 @@
 
   .aqua-impact-band {
     min-height: 100%;
-    background: linear-gradient(180deg, rgb(202 255 222 / 0.35), rgb(255 255 255 / 0));
+    background: rgb(255 255 255 / 0.34);
   }
 
   .aqua-impact-cell {
-    border-top: 1px solid rgb(35 134 137 / 0.16);
+    border-top: 1px solid rgb(217 236 229 / 0.96);
     padding-top: 0.9rem;
   }
 
@@ -428,13 +437,13 @@
   .aqua-flow-line {
     display: grid;
     gap: 0;
-    border-block: 1px solid rgb(35 134 137 / 0.16);
+    border-block: 1px solid rgb(217 236 229 / 0.96);
   }
 
   .aqua-flow-line div {
     display: grid;
     gap: 0.35rem;
-    border-bottom: 1px solid rgb(35 134 137 / 0.12);
+    border-bottom: 1px solid rgb(217 236 229 / 0.92);
     padding-block: 1.15rem;
   }
 
@@ -443,7 +452,7 @@
   }
 
   .aqua-flow-line span {
-    color: #1028ff;
+    color: #2437FF;
     font-size: 0.8rem;
     font-weight: 950;
   }
@@ -454,7 +463,7 @@
   }
 
   .aqua-flow-line p {
-    color: #587174;
+    color: rgb(2 18 37 / 0.62);
     font-size: 0.9rem;
     line-height: 1.55;
   }
@@ -640,7 +649,7 @@
 
   .aqua-live-strip {
     margin-top: clamp(2rem, 12vw, 4.5rem);
-    margin-bottom: 5rem;
+    margin-bottom: 8rem;
     padding-inline: 1rem;
   }
 
