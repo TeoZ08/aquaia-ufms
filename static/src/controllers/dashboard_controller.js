@@ -132,16 +132,16 @@ export default class extends Controller {
 
   metricCard(label, value, help) {
     return `
-      <article class="aqua-panel p-4">
-        <span class="aqua-badge aqua-badge-blue">${escapeHtml(label)}</span>
-        <strong class="mt-4 block text-2xl font-extrabold">${escapeHtml(value)}</strong>
-        <p class="mt-2 text-xs aqua-muted">${escapeHtml(help)}</p>
+      <article class="aqua-metric">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(value)}</strong>
+        <p>${escapeHtml(help)}</p>
       </article>
     `
   }
 
   impactCell(value, label) {
-    return `<div class="rounded-2xl border border-aqua-cyan/10 bg-white/80 p-4 text-center"><strong class="block text-lg font-extrabold">${escapeHtml(value)}</strong><span class="mt-1 block text-xs aqua-muted">${escapeHtml(label)}</span></div>`
+    return `<div class="aqua-impact-cell"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`
   }
 
   renderRecent() {
@@ -282,7 +282,7 @@ export default class extends Controller {
     return `
       <div class="aqua-panel grid min-h-40 place-items-center p-6 text-center">
         <div>
-          <img src="/static/assets/logo/aquaia_simbolo_gota_pin.svg" alt="" class="mx-auto h-12 w-12" />
+          <img src="/static/assets/brand/06_icon_letter_a_wave.png" alt="" class="mx-auto h-12 w-24 object-contain" />
           <strong class="mt-3 block">${escapeHtml(title)}</strong>
           <p class="mt-2 max-w-md text-sm aqua-muted">${escapeHtml(text)}</p>
         </div>
