@@ -1,3 +1,2 @@
 -r requirements.txt
 pytest==8.4.2
-esprima==4.0.1

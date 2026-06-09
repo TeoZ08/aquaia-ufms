@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}AquaIA UFMS{% endblock %}</title>
+  <meta name="theme-color" content="#238689" />
+  <link rel="icon" href="{{ url_for('static', filename='assets/logo/aquaia_favicon_app_icon.svg') }}" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='assets/logo/aquaia_favicon_app_icon_256.png') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}" />
+</head>
+<body
+  data-controller="nav dashboard map"
+  data-dashboard-endpoint-value="{{ url_for('list_occurrences') }}"
+  data-dashboard-tariff-value="{{ tariff_per_m3 }}"
+  data-map-marker-icon-url-value="{{ url_for('static', filename='assets/logo/aquaia_marcador_mapa.svg') }}"
+  data-map-center-lat-value="{{ campus_map.lat }}"
+  data-map-center-lng-value="{{ campus_map.lng }}"
+  data-map-zoom-value="{{ campus_map.zoom }}"
+  data-map-tariff-value="{{ tariff_per_m3 }}"
+  data-action="aquaia:screen-changed@window->dashboard#handleScreenChange aquaia:screen-changed@window->map#handleScreenChange aquaia:occurrence-created@window->dashboard#reload aquaia:occurrences-updated@window->map#updateFromEvent keydown@window->nav#closeOnEscape"
+>
+  <header class="sticky top-0 z-40 border-b border-aqua-cyan/10 bg-aqua-mint/85 backdrop-blur-xl">
+    <div class="aqua-container flex min-h-20 items-center justify-between gap-4">
+      <button class="shrink-0" type="button" data-action="nav#show" data-screen="dashboard" aria-label="Ir para o início">
+        <img class="h-10 w-auto" src="{{ url_for('static', filename='assets/logo/aquaia_logo_horizontal_sem_tagline.svg') }}" alt="AquaIA UFMS" />
+      </button>
+
+      <nav class="hidden items-center gap-2 rounded-full border border-aqua-cyan/15 bg-white/75 p-1 shadow-aqua lg:flex" aria-label="Navegação principal">
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard">Início</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro">Registrar</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel">Painel</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa">Mapa</button>
+        <button class="aqua-tab rounded-full px-4 py-2 text-sm font-extrabold text-slate-600 transition" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia">Metodologia</button>
+      </nav>
+
+      <button
+        class="aqua-btn-secondary lg:hidden"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        data-nav-target="mobileButton"
+        data-action="nav#toggleMenu"
+      >
+        Menu
+      </button>
+    </div>
+
+    <div class="aqua-container hidden pb-4 lg:hidden" data-nav-target="mobileMenu">
+      <nav class="grid gap-2 rounded-3xl border border-aqua-cyan/15 bg-white/90 p-3 shadow-aqua" aria-label="Menu mobile">
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard">Início</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro">Registrar ocorrência</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel">Painel</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa">Mapa</button>
+        <button class="aqua-tab rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-slate-600" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia">Metodologia</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pb-28 pt-6 lg:pb-10">
+    {% block content %}{% endblock %}
+  </main>
+
+  <nav class="fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border border-aqua-cyan/15 bg-white/95 p-2 shadow-aqua backdrop-blur-xl lg:hidden" aria-label="Navegação inferior">
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="dashboard"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">⌂</span>Início</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="painel"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">◇</span>Painel</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="registro"><span class="grid h-10 w-10 place-items-center rounded-full bg-aqua-cyan text-white">＋</span>Novo</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="mapa"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">⌖</span>Mapa</button>
+    <button class="aqua-bottom-tab grid place-items-center gap-1 rounded-2xl px-1 py-2 text-[0.68rem] font-extrabold text-slate-500" type="button" data-nav-target="tab" data-action="nav#show" data-screen="metodologia"><span class="grid h-8 w-8 place-items-center rounded-full bg-aqua-mint text-aqua-cyan">i</span>Base</button>
+  </nav>
+
+  <div class="fixed bottom-24 left-1/2 z-[60] hidden w-[min(92vw,430px)] -translate-x-1/2 rounded-full bg-aqua-ink px-5 py-3 text-center text-sm font-extrabold text-white shadow-aqua" role="status" aria-live="polite" data-controller="toast" data-action="aquaia:toast@window->toast#show">
+    <span data-toast-target="message"></span>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="{{ url_for('static', filename='dist/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "aquaia-ufms",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:css": "npx @tailwindcss/cli -i ./static/src/input.css -o ./static/dist/output.css --watch",
+    "build:css": "npx @tailwindcss/cli -i ./static/src/input.css -o ./static/dist/output.css --minify",
+    "dev:js": "esbuild ./static/src/app.js --bundle --format=esm --outfile=./static/dist/app.js --sourcemap --watch",
+    "build:js": "esbuild ./static/src/app.js --bundle --format=esm --outfile=./static/dist/app.js --minify",
+    "build": "npm run build:css && npm run build:js"
+  },
+  "engines": {
+    "node": ">=22.0.0 <23.0.0"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "3.2.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.0",
+    "esbuild": "0.28.0",
+    "tailwindcss": "4.3.0"
+  }
+}
