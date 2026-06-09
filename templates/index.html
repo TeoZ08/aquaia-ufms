@@ -2,7 +2,7 @@
 
 {% block content %}
 <section id="dashboard" class="aqua-screen aqua-dashboard-surface" data-nav-target="screen" aria-labelledby="dashboard-title">
-  <div class="aqua-container grid gap-8">
+  <div class="aqua-container aqua-dashboard-container grid gap-10 lg:gap-14">
     <section class="aqua-hero-editorial">
       <div class="aqua-hero-copy">
         <div class="flex flex-wrap gap-2" aria-label="Selos do projeto">
@@ -11,10 +11,10 @@
           <span class="aqua-badge aqua-badge-orange">IA assistiva</span>
         </div>
 
-        <img class="mt-8 w-[min(100%,34rem)]" src="{{ url_for('static', filename='assets/brand/02_logo_wordmark_waves_teal_ia.png') }}" alt="aquaIA" />
+        <img class="aqua-hero-wordmark mt-8" src="{{ url_for('static', filename='assets/brand/02_logo_wordmark_waves_teal_ia.png') }}" alt="aquaIA" />
         <h1 id="dashboard-title" class="sr-only">aquaIA - Inteligência hídrica para um campus sustentável</h1>
 
-        <img class="mt-8 w-[min(100%,42rem)]" src="{{ url_for('static', filename='assets/brand/09_hero_phrase_desperdicio_vira_dado.png') }}" alt="O desperdício invisível vira dado." />
+        <img class="aqua-hero-phrase mt-8" src="{{ url_for('static', filename='assets/brand/09_hero_phrase_desperdicio_vira_dado.png') }}" alt="O desperdício invisível vira dado." />
 
         <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-700">
           Registro participativo, triagem com IA quando disponível, fallback por regras e mapa do campus para priorizar manutenção antes que o vazamento vire custo.
@@ -36,12 +36,12 @@
       </div>
     </section>
 
-    <section class="aqua-live-strip" aria-label="Panorama de ocorrências">
+    <section class="aqua-live-strip aqua-wave-band" aria-label="Panorama de ocorrências">
       <div>
         <p class="text-xs font-extrabold uppercase tracking-[0.14em] text-aqua-cyan">Agora no campus</p>
         <h2 class="mt-2 text-2xl font-black">Sinais que viram prioridade</h2>
       </div>
-      <div class="grid gap-3 md:grid-cols-4" data-dashboard-target="homeStats">
+      <div class="aqua-home-stats" data-dashboard-target="homeStats">
         <article class="aqua-metric"><span>Carregando</span><strong>0</strong><p>Ocorrências abertas</p></article>
         <article class="aqua-metric"><span>Carregando</span><strong>0 L</strong><p>Litros/dia monitorados</p></article>
         <article class="aqua-metric"><span>Carregando</span><strong>0</strong><p>Pontos críticos</p></article>
@@ -64,7 +64,7 @@
       </div>
     </section>
 
-    <section class="grid gap-5 xl:grid-cols-[1fr_0.86fr]">
+    <section class="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)]">
       <div class="aqua-product-band">
         <div>
           <p class="text-xs font-extrabold uppercase tracking-[0.14em] text-aqua-cyan">Produto funcional</p>

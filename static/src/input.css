@@ -58,8 +58,12 @@
 
 @layer components {
   .aqua-container {
-    width: min(1180px, calc(100% - 2rem));
+    width: min(1320px, calc(100% - clamp(2rem, 6vw, 5rem)));
     margin-inline: auto;
+  }
+
+  .aqua-dashboard-container {
+    width: min(1500px, calc(100% - clamp(2rem, 7vw, 7rem)));
   }
 
   .aqua-card {
@@ -191,46 +195,49 @@
   .aqua-dashboard-surface {
     position: relative;
     isolation: isolate;
+    overflow: hidden;
   }
 
   .aqua-dashboard-surface::before {
     content: "";
     position: absolute;
-    inset: -1.5rem 0 0;
+    left: 50%;
+    top: clamp(1.5rem, 5vw, 5rem);
     z-index: -1;
+    width: 100vw;
+    height: clamp(7rem, 10vw, 11rem);
+    transform: translateX(-50%);
     pointer-events: none;
-    background-image:
-      url("/static/assets/brand/11_wave_divider_teal.png"),
-      url("/static/assets/brand/11_wave_divider_teal.png");
-    background-position:
-      calc(50% + 18rem) 3.2rem,
-      calc(50% - 24rem) 93rem;
-    background-repeat: no-repeat;
-    background-size:
-      min(46rem, 58vw) auto,
-      min(54rem, 70vw) auto;
-    opacity: 0.22;
+    background: url("/static/assets/brand/11_wave_divider_teal.png") center / auto 100% repeat-x;
+    opacity: 0.18;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
   }
 
   .aqua-dashboard-surface::after {
     content: "";
     position: absolute;
-    inset: -1.5rem 0 0;
+    left: 50%;
+    top: clamp(30rem, 44vw, 43rem);
     z-index: -1;
+    width: 100vw;
+    height: clamp(12rem, 18vw, 18rem);
+    transform: translateX(-50%);
     pointer-events: none;
-    background: url("/static/assets/brand/10_wave_divider_blue.png") center 46rem / 100vw auto no-repeat;
-    opacity: 0.22;
+    background: url("/static/assets/brand/10_wave_divider_blue.png") center / auto 100% repeat-x;
+    opacity: 0.13;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 76%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 76%, transparent 100%);
   }
 
   .aqua-hero-editorial {
     position: relative;
     display: grid;
-    min-height: min(39rem, calc(100vh - 7rem));
+    min-height: min(44rem, calc(100vh - 5rem));
     align-items: center;
-    gap: 2rem;
-    overflow: hidden;
+    gap: clamp(2rem, 6vw, 7rem);
     border-bottom: 1px solid rgb(35 134 137 / 0.18);
-    padding-block: clamp(2rem, 6vw, 5.5rem);
+    padding-block: clamp(2rem, 6vw, 6.5rem);
   }
 
   .aqua-hero-copy,
@@ -239,10 +246,24 @@
     z-index: 1;
   }
 
+  .aqua-hero-wordmark {
+    display: block;
+    width: min(100%, clamp(30rem, 39vw, 43rem));
+    height: auto;
+  }
+
+  .aqua-hero-phrase {
+    display: block;
+    width: min(100%, clamp(33rem, 45vw, 52rem));
+    height: auto;
+  }
+
   .aqua-hero-proof {
     display: grid;
     align-content: center;
     gap: 1.6rem;
+    justify-self: end;
+    width: min(100%, 38rem);
     border-left: 1px solid rgb(35 134 137 / 0.18);
     padding-left: clamp(1.25rem, 3vw, 2.5rem);
   }
@@ -284,13 +305,29 @@
   }
 
   .aqua-live-strip {
+    position: relative;
+    margin-inline: calc(50% - 50vw);
+    padding-inline: max(1rem, calc((100vw - 1500px) / 2 + 3.5rem));
     display: grid;
     gap: 1.2rem;
+    background: linear-gradient(90deg, rgb(248 255 249 / 0.62), rgb(242 255 246 / 0.42), rgb(248 255 249 / 0.62));
+  }
+
+  .aqua-wave-band {
+    isolation: isolate;
+  }
+
+  .aqua-home-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
   }
 
   .aqua-metric {
     border-left: 3px solid #25c5e9;
-    padding: 0.8rem 0.9rem;
+    min-height: 7rem;
+    padding: 0.95rem 1rem;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.34), rgb(255 255 255 / 0));
   }
 
   .aqua-metric span,
@@ -321,10 +358,28 @@
   }
 
   .aqua-finance-editorial {
+    position: relative;
+    isolation: isolate;
     display: grid;
     gap: clamp(1.4rem, 4vw, 3rem);
-    align-items: end;
-    padding-block: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    padding-block: clamp(3rem, 7vw, 7rem);
+  }
+
+  .aqua-finance-editorial::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: clamp(4rem, 8vw, 6.5rem);
+    z-index: -1;
+    width: 100vw;
+    height: clamp(6.5rem, 9vw, 9rem);
+    transform: translateX(-50%);
+    pointer-events: none;
+    background: url("/static/assets/brand/11_wave_divider_teal.png") center / auto 100% repeat-x;
+    opacity: 0.1;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
   }
 
   .aqua-number-wall {
@@ -341,7 +396,7 @@
     display: block;
     margin-top: 0.35rem;
     color: #1028ff;
-    font-size: clamp(2.3rem, 7vw, 5.6rem);
+    font-size: clamp(2.3rem, 5.8vw, 5.4rem);
     font-weight: 950;
     letter-spacing: 0;
     line-height: 0.9;
@@ -512,16 +567,20 @@
 
 @media (min-width: 768px) {
   .aqua-hero-editorial {
-    grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+    grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.65fr);
   }
 
   .aqua-live-strip {
-    grid-template-columns: 0.42fr 1fr;
+    grid-template-columns: minmax(15rem, 0.34fr) minmax(0, 1fr);
     align-items: start;
   }
 
+  .aqua-home-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .aqua-finance-editorial {
-    grid-template-columns: minmax(0, 0.78fr) minmax(21rem, 1fr);
+    grid-template-columns: minmax(21rem, 0.62fr) minmax(0, 1.38fr);
   }
 
   .aqua-flow-line {
@@ -539,27 +598,40 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .aqua-number-wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem) clamp(1.4rem, 3vw, 2.5rem);
+  }
+}
+
 @media (max-width: 767px) {
   .aqua-hero-editorial {
     min-height: auto;
+    border-bottom: 0;
+    padding-block: 2rem 3.5rem;
   }
 
   .aqua-dashboard-surface::before {
-    inset: 0;
-    background-position:
-      center 5.8rem,
-      center 92rem;
-    background-size:
-      92vw auto,
-      118vw auto;
-    opacity: 0.22;
+    top: 4.2rem;
+    width: 120vw;
+    height: 6.5rem;
+    opacity: 0.16;
   }
 
   .aqua-dashboard-surface::after {
-    inset: 0;
-    background-position: center 42rem;
-    background-size: 100vw auto;
-    opacity: 0.2;
+    top: 34rem;
+    width: 120vw;
+    height: 10rem;
+    opacity: 0.12;
+  }
+
+  .aqua-hero-wordmark {
+    width: min(100%, 28rem);
+  }
+
+  .aqua-hero-phrase {
+    width: min(100%, 31rem);
   }
 
   .aqua-hero-proof {
@@ -567,7 +639,20 @@
   }
 
   .aqua-live-strip {
-    margin-top: 9rem;
+    margin-top: clamp(2rem, 12vw, 4.5rem);
+    margin-bottom: 5rem;
+    padding-inline: 1rem;
+  }
+
+  .aqua-metric {
+    min-height: 6.5rem;
+    padding: 0.8rem 0.75rem;
+  }
+
+  .aqua-finance-editorial::before {
+    top: 6rem;
+    width: 120vw;
+    height: 6rem;
   }
 
   .aqua-number-wall strong {
