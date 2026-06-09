@@ -23,7 +23,7 @@ O AquaIA é um web app responsivo para registrar desperdício de água no campus
 
 ## Rodando localmente
 
-Use Python 3.12+ e Node 22.x. O deploy usa `.node-version` com `22.16.0`.
+Use Python 3.13.x e Node 22.x. O deploy usa `.python-version` com `3.13.13` e `.node-version` com `22.16.0`.
 
 ```bash
 python -m venv .venv
@@ -105,7 +105,17 @@ Use o `Procfile` já incluído:
 web: gunicorn app:app
 ```
 
-Build command recomendado:
+O repositório também inclui `render.yaml` para Blueprint no Render. Ele define:
+
+- runtime Python;
+- plano free;
+- branch `main`;
+- build `pip install -r requirements.txt && npm ci && npm run build`;
+- start `gunicorn app:app`;
+- health check em `/api/health`;
+- auto deploy quando checks passarem.
+
+Build command equivalente, se criar o serviço manualmente:
 
 ```bash
 pip install -r requirements.txt && npm ci && npm run build

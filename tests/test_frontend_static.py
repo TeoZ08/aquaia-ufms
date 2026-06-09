@@ -91,3 +91,15 @@ def test_tailwind_output_contains_project_components():
     assert ".aqua-panel" in css
     assert ".aqua-screen" in css
     assert ".aqua-leaflet-marker" in css
+
+
+def test_render_blueprint_matches_runtime_contract():
+    blueprint = read("render.yaml")
+    assert "runtime: python" in blueprint
+    assert "plan: free" in blueprint
+    assert "branch: main" in blueprint
+    assert "pip install -r requirements.txt && npm ci && npm run build" in blueprint
+    assert "startCommand: gunicorn app:app" in blueprint
+    assert "healthCheckPath: /api/health" in blueprint
+    assert "autoDeployTrigger: checksPass" in blueprint
+    assert "TARIFA_M3_ESTIMADA" in blueprint

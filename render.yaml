@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: aquaia-ufms
+    runtime: python
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt && npm ci && npm run build
+    startCommand: gunicorn app:app
+    healthCheckPath: /api/health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: AQUAIA_SEED_DEMO
+        value: "true"
+      - key: AQUAIA_ENABLE_RESET
+        value: "false"
+      - key: TARIFA_M3_ESTIMADA
+        value: "71.03"
+      - key: UFMS_MAP_LAT
+        value: "-20.5032738"
+      - key: UFMS_MAP_LNG
+        value: "-54.6134936"
+      - key: UFMS_MAP_ZOOM
+        value: "16"
+      - key: FLASK_DEBUG
+        value: "false"
