@@ -21,10 +21,14 @@ def test_templates_contain_product_sections_and_brand_assets():
     html = read("templates/index.html")
 
     required_text = [
-        "assets/logo/aquaia_logo_horizontal_sem_tagline.svg",
-        "assets/logo/aquaia_logo_horizontal_com_tagline.svg",
-        "assets/logo/aquaia_simbolo_gota_pin.svg",
-        "assets/logo/aquaia_favicon_app_icon.svg",
+        "assets/brand/02_logo_wordmark_waves_teal_ia.png",
+        "assets/brand/03_logo_wordmark_clean_navbar.png",
+        "assets/brand/05_logo_wordmark_stacked_editorial.png",
+        "assets/brand/06_icon_letter_a_wave.png",
+        "assets/brand/07_map_marker_typographic_a.png",
+        "assets/brand/08_hero_title_inteligencia_hidrica.png",
+        "assets/brand/09_hero_phrase_desperdicio_vira_dado.png",
+        "assets/brand/10_wave_divider_blue.png",
         "dist/output.css",
         "dist/app.js",
         "Impacto financeiro real",
@@ -91,6 +95,9 @@ def test_tailwind_output_contains_project_components():
     assert ".aqua-panel" in css
     assert ".aqua-screen" in css
     assert ".aqua-leaflet-marker" in css
+    assert ".aqua-hero-editorial" in css
+    assert ".aqua-number-wall" in css
+    assert ".aqua-metric" in css
 
 
 def test_render_blueprint_matches_runtime_contract():

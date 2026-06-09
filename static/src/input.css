@@ -5,6 +5,7 @@
 
 @theme {
   --color-aqua-mint: #f2fff6;
+  --color-aqua-mist: #eefcf5;
   --color-aqua-tea: #caffde;
   --color-aqua-sky: #25c5e9;
   --color-aqua-cyan: #238689;
@@ -23,8 +24,7 @@
     min-height: 100vh;
     overflow-x: hidden;
     background:
-      radial-gradient(circle at 18% 0%, rgb(202 255 222 / 0.7), transparent 28rem),
-      linear-gradient(180deg, #fbfffc 0%, #f2fff6 45%, #e9fbf8 100%);
+      linear-gradient(180deg, #f8fff9 0%, #eefcf5 48%, #f7fffb 100%);
     color: #021225;
     font-family: var(--font-sans);
   }
@@ -188,6 +188,207 @@
     color: #587174;
   }
 
+  .aqua-hero-editorial {
+    position: relative;
+    display: grid;
+    min-height: min(39rem, calc(100vh - 7rem));
+    align-items: center;
+    gap: 2rem;
+    overflow: hidden;
+    border-bottom: 1px solid rgb(35 134 137 / 0.18);
+    padding-block: clamp(2rem, 6vw, 5.5rem);
+  }
+
+  .aqua-hero-editorial::before {
+    content: "";
+    position: absolute;
+    inset: 1rem 0 auto auto;
+    width: min(47rem, 72vw);
+    height: 8rem;
+    background: url("/static/assets/brand/11_wave_divider_teal.png") center / contain no-repeat;
+    opacity: 0.32;
+    pointer-events: none;
+  }
+
+  .aqua-hero-copy,
+  .aqua-hero-proof {
+    position: relative;
+    z-index: 1;
+  }
+
+  .aqua-hero-proof {
+    display: grid;
+    align-content: center;
+    gap: 1.6rem;
+    border-left: 1px solid rgb(35 134 137 / 0.18);
+    padding-left: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  .aqua-hero-title {
+    width: min(100%, 32rem);
+  }
+
+  .aqua-proof-lines {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .aqua-proof-lines div {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    border-top: 1px solid rgb(35 134 137 / 0.16);
+    padding-top: 0.75rem;
+  }
+
+  .aqua-proof-lines span {
+    color: #238689;
+    font-size: 0.72rem;
+    font-weight: 900;
+  }
+
+  .aqua-proof-lines strong {
+    font-size: clamp(1.05rem, 2vw, 1.55rem);
+    line-height: 1.1;
+  }
+
+  .aqua-wave-divider {
+    width: 100%;
+    max-height: 6.5rem;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.9;
+  }
+
+  .aqua-live-strip,
+  .aqua-product-band,
+  .aqua-impact-band {
+    border-block: 1px solid rgb(35 134 137 / 0.14);
+    padding-block: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .aqua-live-strip {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .aqua-metric {
+    border-left: 3px solid #25c5e9;
+    padding: 0.8rem 0.9rem;
+  }
+
+  .aqua-metric span,
+  .aqua-impact-cell span,
+  .aqua-number-wall span {
+    display: block;
+    color: #587174;
+    font-size: 0.68rem;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+
+  .aqua-metric strong {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 950;
+    letter-spacing: 0;
+    line-height: 0.95;
+  }
+
+  .aqua-metric p,
+  .aqua-impact-cell p {
+    margin-top: 0.35rem;
+    color: #587174;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .aqua-finance-editorial {
+    display: grid;
+    gap: clamp(1.4rem, 4vw, 3rem);
+    align-items: end;
+    padding-block: clamp(2rem, 6vw, 5rem);
+  }
+
+  .aqua-number-wall {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .aqua-number-wall div {
+    border-top: 1px solid rgb(35 134 137 / 0.18);
+    padding-top: 1rem;
+  }
+
+  .aqua-number-wall strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: #1028ff;
+    font-size: clamp(2.3rem, 7vw, 5.6rem);
+    font-weight: 950;
+    letter-spacing: 0;
+    line-height: 0.9;
+  }
+
+  .aqua-product-band {
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  .aqua-impact-band {
+    min-height: 100%;
+    background: linear-gradient(180deg, rgb(202 255 222 / 0.35), rgb(255 255 255 / 0));
+  }
+
+  .aqua-impact-cell {
+    border-top: 1px solid rgb(35 134 137 / 0.16);
+    padding-top: 0.9rem;
+  }
+
+  .aqua-impact-cell strong {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: clamp(1.55rem, 3vw, 2.4rem);
+    font-weight: 950;
+    line-height: 1;
+  }
+
+  .aqua-flow-line {
+    display: grid;
+    gap: 0;
+    border-block: 1px solid rgb(35 134 137 / 0.16);
+  }
+
+  .aqua-flow-line div {
+    display: grid;
+    gap: 0.35rem;
+    border-bottom: 1px solid rgb(35 134 137 / 0.12);
+    padding-block: 1.15rem;
+  }
+
+  .aqua-flow-line div:last-child {
+    border-bottom: 0;
+  }
+
+  .aqua-flow-line span {
+    color: #1028ff;
+    font-size: 0.8rem;
+    font-weight: 950;
+  }
+
+  .aqua-flow-line strong {
+    font-size: 1.15rem;
+    font-weight: 900;
+  }
+
+  .aqua-flow-line p {
+    color: #587174;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
   .aqua-screen {
     display: none;
   }
@@ -291,6 +492,54 @@
   .aqua-campus-marker:hover small,
   .aqua-campus-marker:focus-visible small {
     opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .aqua-hero-editorial {
+    grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+  }
+
+  .aqua-live-strip {
+    grid-template-columns: 0.42fr 1fr;
+    align-items: start;
+  }
+
+  .aqua-finance-editorial {
+    grid-template-columns: minmax(0, 0.78fr) minmax(21rem, 1fr);
+  }
+
+  .aqua-flow-line {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .aqua-flow-line div {
+    border-right: 1px solid rgb(35 134 137 / 0.12);
+    border-bottom: 0;
+    padding: 1.15rem;
+  }
+
+  .aqua-flow-line div:last-child {
+    border-right: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .aqua-hero-editorial {
+    min-height: auto;
+  }
+
+  .aqua-hero-proof {
+    display: none;
+  }
+
+  .aqua-wave-divider {
+    max-height: 4.5rem;
+    margin-bottom: 6rem;
+  }
+
+  .aqua-number-wall strong {
+    overflow-wrap: anywhere;
   }
 }
 
