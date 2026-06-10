@@ -281,8 +281,28 @@
     padding-left: clamp(1.25rem, 3vw, 2.5rem);
   }
 
-  .aqua-hero-title {
+  .aqua-hero-proof-title {
+    display: grid;
     width: min(100%, 32rem);
+    color: #021225;
+    font-size: 2.75rem;
+    font-weight: 950;
+    letter-spacing: 0;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  .aqua-hero-proof-title span,
+  .aqua-hero-proof-title strong {
+    display: block;
+  }
+
+  .aqua-hero-proof-title strong {
+    font-weight: inherit;
+  }
+
+  .aqua-hero-proof-title-accent {
+    color: var(--color-aqua-blue);
   }
 
   .aqua-proof-lines {
