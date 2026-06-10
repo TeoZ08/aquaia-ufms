@@ -9,7 +9,7 @@
   --color-aqua-mint: #E9FFF2;
   --color-aqua-sky: #25C5E9;
   --color-aqua-cyan: #238689;
-  --color-aqua-blue: #2437FF;
+  --color-aqua-blue: #0077B6;
   --color-aqua-ink: #021225;
   --color-aqua-line: #D9ECE5;
   --font-sans: "Sora", "Plus Jakarta Sans", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -258,10 +258,17 @@
     height: auto;
   }
 
-  .aqua-hero-phrase {
-    display: block;
-    width: min(100%, clamp(33rem, 45vw, 52rem));
-    height: auto;
+  .aqua-hero-statement {
+    max-width: min(100%, 52rem);
+    color: #021225;
+    font-size: 5.25rem;
+    font-weight: 950;
+    letter-spacing: 0;
+    line-height: 0.95;
+  }
+
+  .aqua-hero-statement-accent {
+    color: var(--color-aqua-blue);
   }
 
   .aqua-hero-proof {
@@ -404,7 +411,7 @@
   .aqua-number-wall strong {
     display: block;
     margin-top: 0.35rem;
-    color: #2437FF;
+    color: var(--color-aqua-blue);
     font-size: clamp(2.3rem, 5.8vw, 5.4rem);
     font-weight: 950;
     letter-spacing: 0;
@@ -452,7 +459,7 @@
   }
 
   .aqua-flow-line span {
-    color: #2437FF;
+    color: var(--color-aqua-blue);
     font-size: 0.8rem;
     font-weight: 950;
   }
@@ -639,8 +646,10 @@
     width: min(100%, 28rem);
   }
 
-  .aqua-hero-phrase {
-    width: min(100%, 31rem);
+  .aqua-hero-statement {
+    max-width: min(100%, 31rem);
+    font-size: 2.6rem;
+    line-height: 1;
   }
 
   .aqua-hero-proof {
