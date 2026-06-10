@@ -1,6 +1,11 @@
 .env
+.env.*
+!.env.example
 .venv/
+venv/
 node_modules/
+dist/
+build/
 __pycache__/
 *.py[cod]
 *.pyc
@@ -11,6 +16,8 @@ instance/
 .DS_Store
 .vscode/
 *.db
+*.sqlite
+*.sqlite3
 aquaia.db
 uploads/*
 !uploads/.gitkeep
