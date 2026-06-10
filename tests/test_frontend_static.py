@@ -34,9 +34,10 @@ def test_templates_contain_product_sections_and_brand_assets():
         "assets/brand/06_icon_letter_a_wave.png",
         "assets/brand/07_map_marker_typographic_a.png",
         "assets/brand/08_hero_title_inteligencia_hidrica.png",
-        "assets/brand/09_hero_phrase_desperdicio_vira_dado.png",
         "dist/output.css",
         "dist/app.js",
+        "O desperdício invisível",
+        "aqua-hero-statement",
         "Impacto financeiro real",
         "R$ 8,36 mi",
         "R$ 7,92 mi",
@@ -52,6 +53,7 @@ def test_templates_contain_product_sections_and_brand_assets():
     combined = f"{base}\n{html}"
     for text in required_text:
         assert text in combined
+    assert "assets/brand/09_hero_phrase_desperdicio_vira_dado.png" not in combined
     assert "assets/brand/03_logo_wordmark_clean_navbar.png" not in combined
     assert "assets/brand/05_logo_wordmark_stacked_editorial.png" not in combined
 
@@ -99,6 +101,7 @@ def test_stimulus_controllers_and_targets_are_wired():
 
 def test_tailwind_output_contains_project_components():
     css = read("static/dist/output.css")
+    source_css = read("static/src/input.css")
     assert ".aqua-card" in css
     assert ".aqua-panel" in css
     assert ".aqua-screen" in css
@@ -108,6 +111,8 @@ def test_tailwind_output_contains_project_components():
     assert ".aqua-wave-band" in css
     assert ".aqua-home-stats" in css
     assert ".aqua-hero-editorial" in css
+    assert ".aqua-hero-statement" in css
+    assert ".aqua-hero-statement-accent" in css
     assert ".aqua-number-wall" in css
     assert ".aqua-metric" in css
     assert "repeat-x" in css
@@ -115,8 +120,22 @@ def test_tailwind_output_contains_project_components():
     assert "wave-loop-teal" in css
     assert "10_wave_divider_blue" not in css
     assert "11_wave_divider_teal" not in css
-    assert "#FFFDF2" in read("static/src/input.css")
-    assert "linear-gradient(180deg, #f8fff9" not in read("static/src/input.css")
+    assert "#0077b6" in css.lower()
+    assert "#2437ff" not in css.lower()
+    assert "#FFFDF2" in source_css
+    assert "#0077B6" in source_css
+    assert "#2437FF" not in source_css
+    assert "linear-gradient(180deg, #f8fff9" not in source_css
+
+
+def test_interface_design_system_documents_visual_rules():
+    system = ROOT / ".interface-design" / "system.md"
+    assert system.exists()
+    text = system.read_text(encoding="utf-8")
+    assert "02_logo_wordmark_waves_teal_ia.png" in text
+    assert "#0077B6" in text
+    assert "#2437FF" in text
+    assert "wave-loop-blue.png" in text
 
 
 def test_wave_loop_assets_are_transparent_rgba_tiles():
